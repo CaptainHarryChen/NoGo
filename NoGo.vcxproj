@@ -143,13 +143,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CheckerBoard.cpp" />
-    <ClCompile Include="functions.cpp" />
+    <ClCompile Include="Graphic.cpp" />
+    <ClCompile Include="GameRule.cpp" />
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CheckerBoard.h" />
-    <ClInclude Include="functions.h" />
+    <ClInclude Include="Graphic.h" />
+    <ClInclude Include="GameRule.h" />
     <ClInclude Include="GameScene.h" />
   </ItemGroup>
   <ItemGroup>

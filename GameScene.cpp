@@ -1,13 +1,15 @@
 #include "GameScene.h"
 #include <GL/glut.h>
 
-GameScene::GameScene() :checkerBoard(Rect(0, 0, 900, 900))
+GameScene::GameScene(int width, int height) :scene_width(width), scene_height(height)
 {
+	pRuler = new GameRule;
+	pCheckerBoard = new CheckerBoard(Rect(0, 0, 900, 900), pRuler);
 }
 
 void GameScene::Init()
 {
-	checkerBoard.Init();
+	pCheckerBoard->Init();
 }
 
 void GameScene::Display()
@@ -16,5 +18,14 @@ void GameScene::Display()
 	glLoadIdentity();
 	gluOrtho2D(0, scene_width, scene_height, 0);
 
-	checkerBoard.Draw();
+	pCheckerBoard->Draw();
+}
+
+void GameScene::OnMouseMove(int x, int y)
+{
+}
+
+void GameScene::OnMouseClick(int button, int state, int x, int y)
+{
+
 }

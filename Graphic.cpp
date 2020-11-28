@@ -1,4 +1,4 @@
-#include "functions.h"
+#include "Graphic.h"
 #include <cstdio>
 
 GLint LoadTexture(const char* file_name)
@@ -108,6 +108,21 @@ void DrawTexture(Rect pos, GLint texture)
 	glVertex2d(pos.rx, pos.ly);
 	glTexCoord2f(0.0f, 1.0f);
 	glVertex2d(pos.lx, pos.ly);
+	glEnd();
+	glDisable(GL_TEXTURE_2D);
+}
+
+void DrawCircleTexture(Point pos, double radius, double text_radius, GLint texture)
+{
+	const double M_PI = acos(-1);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glBegin(GL_TRIANGLE_FAN);
+	for (int i = 0; i < CircleSegment; i++)
+	{
+		glTexCoord2d(0.5 + text_radius * cos(2 * M_PI * i / CircleSegment), 0.5 + text_radius * sin(2 * M_PI * i / CircleSegment));
+		glVertex2d(pos.x - radius * cos(2 * M_PI * i / CircleSegment), pos.y - radius * sin(2 * M_PI * i / CircleSegment));
+	}
 	glEnd();
 	glDisable(GL_TEXTURE_2D);
 }

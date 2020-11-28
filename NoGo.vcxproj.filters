@@ -27,10 +27,13 @@
     <ClCompile Include="GameScene.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="functions.cpp">
+    <ClCompile Include="CheckerBoard.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="CheckerBoard.cpp">
+    <ClCompile Include="GameRule.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphic.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -38,10 +41,13 @@
     <ClInclude Include="GameScene.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="functions.h">
+    <ClInclude Include="CheckerBoard.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="CheckerBoard.h">
+    <ClInclude Include="GameRule.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphic.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
