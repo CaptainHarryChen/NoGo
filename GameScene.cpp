@@ -5,7 +5,6 @@ GameScene::GameScene(int width, int height) :scene_width(width), scene_height(he
 {
 	pRuler = new GameRule;
 	pCheckerBoard = new CheckerBoard(Rect(0, 0, 900, 900), pRuler);
-	pRuler->Register(pCheckerBoard);
 }
 
 void GameScene::Init()
