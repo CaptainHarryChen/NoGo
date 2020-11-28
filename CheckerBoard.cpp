@@ -7,6 +7,7 @@ CheckerBoard::CheckerBoard(Rect _pos, GameRule *p)
 	memset(img_board, 0, sizeof img_board);
 	img_black = img_white = 0;
 	pRuler = p;
+	memset(board, 0, sizeof board);
 }
 
 void CheckerBoard::Init()
@@ -54,6 +55,33 @@ void CheckerBoard::Draw()
 				id = 9;
 			DrawTexture(dr, img_board[id]);
 		}
-	DrawCircleTexture(Point(50, 50), 46, 0.46, img_black);
-	DrawCircleTexture(Point(150, 150), 46, 0.46, img_white);
+	for(int i=0;i<9;i++)
+		for (int j = 0; j < 9; j++)
+		{
+			if (board[i][j] == 1)
+				DrawCircleTexture(Point(j * w + w / 2.0, i * h + h / 2.0), (int)(0.46 * w), 0.46, img_black);
+			else if (board[i][j] == 2)
+				DrawCircleTexture(Point(j * w + w / 2.0, i * h + h / 2.0), (int)(0.46 * w), 0.46, img_white);
+		}
+}
+
+void CheckerBoard::OnMouseClick(Point a)
+{
+	int w = (pos.rx - pos.lx) / 9, h = (pos.ry - pos.ly) / 9;
+	int x = a.x / w, y = a.y / h;
+	if (pRuler->isLegal(x, y, 0))
+	{
+		pRuler->setPiece(x, y, 0);
+		board[x][y] = 1;
+	}
+}
+
+bool CheckerBoard::in(Point a)
+{
+	return pos.inRect(a);
+}
+
+void CheckerBoard::setPiece(int x, int y, bool col)
+{
+	board[x][y] = col + 1;
 }

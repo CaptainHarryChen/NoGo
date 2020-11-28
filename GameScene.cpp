@@ -5,6 +5,7 @@ GameScene::GameScene(int width, int height) :scene_width(width), scene_height(he
 {
 	pRuler = new GameRule;
 	pCheckerBoard = new CheckerBoard(Rect(0, 0, 900, 900), pRuler);
+	pRuler->Register(pCheckerBoard);
 }
 
 void GameScene::Init()
@@ -27,5 +28,6 @@ void GameScene::OnMouseMove(int x, int y)
 
 void GameScene::OnMouseClick(int button, int state, int x, int y)
 {
-
+	if (pCheckerBoard->in(Point(x, y)))
+		pCheckerBoard->OnMouseClick(Point(x, y));
 }

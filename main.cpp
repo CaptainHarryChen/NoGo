@@ -17,7 +17,7 @@ void OnKeyBoard(unsigned char key, int x, int y);
 void OnMouseClick(int button, int state, int x, int y);
 void OnSpecialKey(int key, int x, int y);
 
-GameScene *pGameScene;
+GameScene* pGameScene;
 int win_w, win_h;
 
 void Display()
@@ -124,6 +124,6 @@ int main(int argc, char** argv)
 
 void ChangeXY(int x, int y, int& resx, int& resy)
 {
-	resx = x / SCENE_WIDTH;
-	resy = y / SCENE_HEIGHT;
+	resx = (int)(1.0 * x * SCENE_WIDTH / win_w);
+	resy = (int)(1.0 * y * SCENE_HEIGHT / win_h);
 }
