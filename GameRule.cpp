@@ -7,10 +7,22 @@ GameRule::GameRule()
 	step = 0;
 }
 
-bool GameRule::isLegal(int x, int y)
+bool GameRule::isLegal(int x, int y, bool col)
 {
 	if (step == 0 && x == 4 && y == 4)
 		return false;
-	int col = step & 1;
+	if ((step & 1) != col)
+		return false;
 	return true;
+}
+
+void GameRule::setPiece(int x, int y, bool col)
+{
+	step++;
+	A[x][y] = col + 1;
+}
+
+void GameRule::Register(CheckerBoard* p)
+{
+	pBoard = p;
 }
