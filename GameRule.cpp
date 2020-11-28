@@ -21,8 +21,3 @@ void GameRule::setPiece(int x, int y, bool col)
 	step++;
 	A[x][y] = col + 1;
 }
-
-void GameRule::Register(CheckerBoard* p)
-{
-	pBoard = p;
-}

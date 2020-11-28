@@ -59,9 +59,9 @@ void CheckerBoard::Draw()
 		for (int j = 0; j < 9; j++)
 		{
 			if (board[i][j] == 1)
-				DrawCircleTexture(Point(j * w + w / 2.0, i * h + h / 2.0), (int)(0.46 * w), 0.46, img_black);
+				DrawCircleTexture(Point(j * w + w / 2, i * h + h / 2), (int)(0.46 * w), 0.46, img_black);
 			else if (board[i][j] == 2)
-				DrawCircleTexture(Point(j * w + w / 2.0, i * h + h / 2.0), (int)(0.46 * w), 0.46, img_white);
+				DrawCircleTexture(Point(j * w + w / 2, i * h + h / 2), (int)(0.46 * w), 0.46, img_white);
 		}
 }
 
