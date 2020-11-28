@@ -1,8 +1,12 @@
 #include "CheckerBoard.h"
+#include <cstring>
 
-CheckerBoard::CheckerBoard(Rect _pos)
+CheckerBoard::CheckerBoard(Rect _pos, GameRule *p)
 {
 	pos = _pos;
+	memset(img_board, 0, sizeof img_board);
+	img_black = img_white = 0;
+	pRuler = p;
 }
 
 void CheckerBoard::Init()
@@ -17,6 +21,9 @@ void CheckerBoard::Init()
 	img_board[7] = LoadTexture("img//checkerboard//board7.bmp");
 	img_board[8] = LoadTexture("img//checkerboard//board8.bmp");
 	img_board[9] = LoadTexture("img//checkerboard//board9.bmp");
+	img_black = LoadTexture("img//piece//blackpiece.bmp");
+	img_white = LoadTexture("img//piece//whitepiece.bmp");
+
 }
 
 void CheckerBoard::Draw()
@@ -47,4 +54,6 @@ void CheckerBoard::Draw()
 				id = 9;
 			DrawTexture(dr, img_board[id]);
 		}
+	DrawCircleTexture(Point(50, 50), 46, 0.46, img_black);
+	DrawCircleTexture(Point(150, 150), 46, 0.46, img_white);
 }

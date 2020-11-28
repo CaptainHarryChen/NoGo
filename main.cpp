@@ -3,14 +3,18 @@
 
 const int INIT_WINDOW_WIDTH = 1024;
 const int INIT_WINDOW_HEIGHT = 768;
+const int SCENE_WIDTH = 1200;
+const int SCENE_HEIGHT = 900;
 const char TITLE[] = "NoGo";
+
+void ChangeXY(int x, int y, int& resx, int& resy);
 
 void Display();
 void Idle();
 void Reshape(int new_w, int new_h);
 void Timer(int id);
 void OnKeyBoard(unsigned char key, int x, int y);
-void OnMouse(int button, int state, int x, int y);
+void OnMouseClick(int button, int state, int x, int y);
 void OnSpecialKey(int key, int x, int y);
 
 GameScene *pGameScene;
@@ -76,12 +80,18 @@ void OnSpecialKey(int key, int x, int y)
 		SpecialProcess(key, ty, tx);*/
 }
 
-void OnMouse(int button, int state, int x, int y)
+void OnMouseMove(int x, int y)
 {
-	/*int tx, ty;
-	CtoGui::ChangeXY(x, y, tx, ty);
-	if (MouseProcess != NULL)
-		MouseProcess(button, state, ty, tx);*/
+	int tx, ty;
+	ChangeXY(x, y, tx, ty);
+	pGameScene->OnMouseMove(ty, tx);
+}
+
+void OnMouseClick(int button, int state, int x, int y)
+{
+	int tx, ty;
+	ChangeXY(x, y, tx, ty);
+	pGameScene->OnMouseClick(button, state, ty, tx);
 }
 
 int main(int argc, char** argv)
@@ -96,17 +106,24 @@ int main(int argc, char** argv)
 	glutInitWindowSize(win_w, win_h);
 	glutCreateWindow(TITLE);
 
-	pGameScene = new GameScene();
+	pGameScene = new GameScene(SCENE_WIDTH, SCENE_HEIGHT);
 	pGameScene->Init();
 
 	glutDisplayFunc(&Display);
 	glutIdleFunc(&Idle);
-	glutReshapeFunc(&Reshape);
+	//glutReshapeFunc(&Reshape);
 	glutKeyboardFunc(&OnKeyBoard);
 	glutSpecialFunc(&OnSpecialKey);
-	glutMouseFunc(&OnMouse);
+	glutMouseFunc(&OnMouseClick);
+	glutMotionFunc(&OnMouseMove);
 
 	glutMainLoop();
 
 	return 0;
+}
+
+void ChangeXY(int x, int y, int& resx, int& resy)
+{
+	resx = x / SCENE_WIDTH;
+	resy = y / SCENE_HEIGHT;
 }
