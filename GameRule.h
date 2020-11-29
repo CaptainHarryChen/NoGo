@@ -7,6 +7,7 @@ class GameRule
 
 public:
 	GameRule();
+	bool moveColor();
 	bool isLegal(int x, int y, bool col);
 	void setPiece(int x, int y, bool col);
 };
