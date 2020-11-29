@@ -22,22 +22,12 @@ int win_w, win_h;
 
 void Display()
 {
-	glClear(GL_COLOR_BUFFER_BIT);
-
 	pGameScene->Display();
-
-	glutSwapBuffers();
 }
 
 void Idle()
 {
-	/*if (timer_setted == false)
-	{
-		if (UpdateScreen != NULL)
-			(*UpdateScreen)();
-		Display();
-	}*/
-	//Display();
+	pGameScene->Idle();
 }
 
 void Reshape(int new_w, int new_h)
