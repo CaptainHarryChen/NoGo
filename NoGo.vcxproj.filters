@@ -16,6 +16,9 @@
     <Filter Include="资源文件\checkerboard">
       <UniqueIdentifier>{8ff33515-20d9-42ec-a46c-c49b7705100b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="资源文件\piece">
+      <UniqueIdentifier>{fb253539-d928-434c-aff7-1ad3f63f7bf8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -90,6 +93,12 @@
     </Image>
     <Image Include="img\checkerboard\checkerboard.bmp">
       <Filter>资源文件\checkerboard</Filter>
+    </Image>
+    <Image Include="img\piece\blackpiece.bmp">
+      <Filter>资源文件\piece</Filter>
+    </Image>
+    <Image Include="img\piece\whitepiece.bmp">
+      <Filter>资源文件\piece</Filter>
     </Image>
   </ItemGroup>
 </Project>

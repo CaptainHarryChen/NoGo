@@ -1,13 +1,14 @@
 #include "GameAI.h"
 
-GameAI::GameAI(GameRule* p, int col)
+GameAI::GameAI(Color col)
 {
-	pRuler = p;
+	pRuler = new GameRule;
 	color = col;
 	memset(A, 0, sizeof A);
 	message = NONE;
 	pMain = NULL;
 	need_move = false;
+	ready_move = false;
 }
 
 bool GameAI::ProcessMessage()
@@ -22,15 +23,17 @@ bool GameAI::ProcessMessage()
 	{
 		message = NONE;
 		msg_lock.unlock();
-		A[player_move.x][player_move.y] = (color == 1 ? 2 : 1);
+		A[player_move.x][player_move.y] = (color == BLACK ? WHITE : BLACK);
 	}
 	else if (message == CALC)
 	{
 		message = NONE;
 		msg_lock.unlock();
 		start_time = clock();
-		need_move = true;
 		mv_lock.lock();
+		need_move = true;
+		ready_move = false;
+		mv_lock.unlock();
 	}
 	else
 		msg_lock.unlock();
@@ -44,6 +47,7 @@ void GameAI::Run()
 		if (ProcessMessage() == false)
 			break;
 		//search
+		mv_lock.lock();
 		if (need_move == true)
 		{
 			bool flag = false;
@@ -51,9 +55,13 @@ void GameAI::Run()
 				for (int j = 0; j < 9 && !flag; j++)
 					if (pRuler->isLegal(i, j, color))
 						ai_move = Point(i, j), flag = true;
+			
 			need_move = false;
-			mv_lock.unlock();
+			ready_move = true;
+			A[ai_move.x][ai_move.y] = color;
+			pRuler->setPiece(ai_move.x, ai_move.y, color);
 		}
+		mv_lock.unlock();
 	}
 }
 
@@ -79,9 +87,14 @@ void GameAI::SendMoveMessage()
 
 bool GameAI::GetMove(Point &res)
 {
-	if (!mv_lock.try_lock())
+	mv_lock.lock();
+	if (!ready_move)
+	{
+		mv_lock.unlock();
 		return false;
+	}
 	res = ai_move;
+	ready_move = false;
 	mv_lock.unlock();
 	return true;
 }
@@ -92,5 +105,7 @@ void GameAI::PlayerMove(Point p)
 	message = MOVE;
 	msg_lock.unlock();
 	player_move = p;
+	pRuler->setPiece(p.x, p.y, color == WHITE ? BLACK : WHITE);
+	A[p.x][p.y] = color == WHITE ? BLACK : WHITE;
 }
 

@@ -168,6 +168,8 @@
     <Image Include="img\checkerboard\board8.bmp" />
     <Image Include="img\checkerboard\board9.bmp" />
     <Image Include="img\checkerboard\checkerboard.bmp" />
+    <Image Include="img\piece\blackpiece.bmp" />
+    <Image Include="img\piece\whitepiece.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
