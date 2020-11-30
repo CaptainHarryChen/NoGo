@@ -1,12 +1,13 @@
 #include "CheckerBoard.h"
 #include <cstring>
 
-CheckerBoard::CheckerBoard(Rect _pos, GameRule *p)
+CheckerBoard::CheckerBoard(Rect _pos, GameRule *p, GameAI *pai)
 {
 	pos = _pos;
 	memset(img_board, 0, sizeof img_board);
 	img_black = img_white = 0;
 	pRuler = p;
+	pAI = pai;
 	memset(board, 0, sizeof board);
 }
 
@@ -69,10 +70,11 @@ void CheckerBoard::OnMouseClick(Point a)
 {
 	int w = (pos.rx - pos.lx) / 9, h = (pos.ry - pos.ly) / 9;
 	int x = a.x / w, y = a.y / h;
-	if (pRuler->isLegal(x, y, 0))
+	if (pRuler->isLegal(x, y, BLACK))
 	{
-		pRuler->setPiece(x, y, 0);
-		board[x][y] = 1;
+		pRuler->setPiece(x, y, BLACK);
+		pAI->PlayerMove(Point(x,y));
+		board[x][y] = BLACK;
 	}
 }
 
@@ -81,7 +83,7 @@ bool CheckerBoard::in(Point a)
 	return pos.inRect(a);
 }
 
-void CheckerBoard::setPiece(int x, int y, bool col)
+void CheckerBoard::setPiece(int x, int y, Color col)
 {
-	board[x][y] = col + 1;
+	board[x][y] = col;
 }

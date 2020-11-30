@@ -4,8 +4,8 @@
 GameScene::GameScene(int width, int height) :scene_width(width), scene_height(height)
 {
 	pRuler = new GameRule;
-	pCheckerBoard = new CheckerBoard(Rect(0, 0, 900, 900), pRuler);
-	pAI = new GameAI(pRuler, 2);
+	pAI = new GameAI(WHITE);
+	pCheckerBoard = new CheckerBoard(Rect(0, 0, 900, 900), pRuler, pAI);
 }
 
 void GameScene::Init()
@@ -27,13 +27,13 @@ void GameScene::Display()
 
 void GameScene::Idle()
 {
-	if (pRuler->moveColor() == 1)
+	if (pRuler->moveColor() == WHITE)
 	{
 		Point a;
 		if (pAI->GetMove(a) == true)
 		{
-			pRuler->setPiece(a.x, a.y, 1);
-			pCheckerBoard->setPiece(a.x, a.y, 1);
+			pRuler->setPiece(a.x, a.y, WHITE);
+			pCheckerBoard->setPiece(a.x, a.y, WHITE);
 		}
 	}
 	Display();
@@ -50,7 +50,7 @@ void GameScene::OnMouseClick(int button, int state, int x, int y)
 		if (pCheckerBoard->in(Point(x, y)))
 			pCheckerBoard->OnMouseClick(Point(x, y));
 
-		if (pRuler->moveColor() == 1)
+		if (pRuler->moveColor() == WHITE)
 			pAI->SendMoveMessage();
 	}
 }
