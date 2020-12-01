@@ -9,6 +9,10 @@ struct Point
 	int x, y;
 	Point() { x = y = 0; }
 	Point(int a, int b) :x(a), y(b) {}
+	bool operator == (const Point& t)const
+	{
+		return x == t.x && y == t.y;
+	}
 };
 
 struct Rect
