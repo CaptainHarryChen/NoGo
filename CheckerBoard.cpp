@@ -1,7 +1,7 @@
 #include "CheckerBoard.h"
 #include <cstring>
 
-CheckerBoard::CheckerBoard(Rect _pos, GameRule *p, GameAI *pai)
+CheckerBoard::CheckerBoard(Rect _pos, GameRule* p, GameAI* pai)
 {
 	pos = _pos;
 	memset(img_board, 0, sizeof img_board);
@@ -9,6 +9,7 @@ CheckerBoard::CheckerBoard(Rect _pos, GameRule *p, GameAI *pai)
 	pRuler = p;
 	pAI = pai;
 	memset(board, 0, sizeof board);
+	mouse_pos = Point(-1, -1);
 }
 
 void CheckerBoard::Init()
@@ -25,6 +26,8 @@ void CheckerBoard::Init()
 	img_board[9] = LoadTexture("img//checkerboard//board9.bmp");
 	img_black = LoadTexture("img//piece//blackpiece.bmp");
 	img_white = LoadTexture("img//piece//whitepiece.bmp");
+	//img_green = LoadTexture("img//piece//greenpiece.bmp");
+	//img_red = LoadTexture("img//piece//redpiece.bmp");
 
 }
 
@@ -59,11 +62,28 @@ void CheckerBoard::Draw()
 	for(int i=0;i<9;i++)
 		for (int j = 0; j < 9; j++)
 		{
-			if (board[i][j] == 1)
+			if (board[i][j] == BLACK)
 				DrawCircleTexture(Point(j * w + w / 2, i * h + h / 2), (int)(0.46 * w), 0.46, img_black);
-			else if (board[i][j] == 2)
+			else if (board[i][j] == WHITE)
 				DrawCircleTexture(Point(j * w + w / 2, i * h + h / 2), (int)(0.46 * w), 0.46, img_white);
 		}
+	if (mouse_legal)
+		DrawTransCircle(Point(mouse_pos.y * w + w / 2, mouse_pos.x * h + h / 2), (int)(0.46 * w), 0.0, 1.0, 0.0, 0.5);
+	else
+		DrawTransCircle(Point(mouse_pos.y * w + w / 2, mouse_pos.x * h + h / 2), (int)(0.46 * w), 1.0, 0.0, 0.0, 0.5);
+}
+
+void CheckerBoard::SetMousePos(Point u)
+{
+	if (in(u))
+	{
+		int w = (pos.rx - pos.lx) / 9, h = (pos.ry - pos.ly) / 9;
+		int x = u.x / w, y = u.y / h;
+		mouse_pos = Point(x, y);
+		mouse_legal = pRuler->isLegal(x, y, BLACK);
+	}
+	else
+		mouse_pos = Point(-1, -1);
 }
 
 void CheckerBoard::OnMouseClick(Point a)

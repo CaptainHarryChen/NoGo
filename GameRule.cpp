@@ -21,6 +21,8 @@ Color GameRule::moveColor()
 
 bool GameRule::isLegal(int x, int y, Color col)
 {
+	if (B[x][y] != -1)
+		return (B[x][y] & (1 << (col - 1))) != 0;
 	//std::cerr << "Check move (" << x << "," << y << "," << col << ")" << std::endl;
 	if (step == 0 && x == 4 && y == 4)
 		return false;
@@ -57,6 +59,26 @@ bool GameRule::isLegal(int x, int y, Color col)
 
 	//std::cerr << "is legal move" << std::endl;
 	return true;
+}
+
+int GameRule::isOver()
+{
+	int cnt1 = 0, cnt2 = 0;
+	for (int i = 0; i < 9; i++)
+		for (int j = 0; j < 9; j++)
+		{
+			int t = 0;
+			if (isLegal(i, j, BLACK))
+				t |= 1, cnt1++;
+			if (isLegal(i, j, WHITE))
+				t |= 2, cnt2++;
+			B[i][j] = t;
+		}
+	if (moveColor() == BLACK && cnt1 == 0)
+		return GAME_WHITE_WIN;
+	if (moveColor() == WHITE && cnt2 == 0)
+		return GAME_BLACK_WIN;
+	return 0;
 }
 
 void GameRule::setPiece(int x, int y, Color col)
@@ -106,5 +128,6 @@ void GameRule::setPiece(int x, int y, Color col)
 				dsu.hp[r1.x][r1.y]++;
 		}
 	}
+	memset(B, -1, sizeof B);
 	//std::cerr << "(" << x << "," << y << ")'s hp is " << dsu.hp[r1.x][r1.y] << std::endl;
 }

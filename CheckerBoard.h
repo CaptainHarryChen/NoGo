@@ -11,11 +11,14 @@ class CheckerBoard
 	GameRule* pRuler;
 	GameAI* pAI;
 	Color board[9][9];
+	Point mouse_pos;
+	bool mouse_legal;
 
 public:
 	CheckerBoard(Rect _pos, GameRule *p, GameAI *pai);
 	void Init();
 	void Draw();
+	void SetMousePos(Point u);
 	void OnMouseClick(Point a);
 
 	bool in(Point a);

@@ -2,6 +2,9 @@
 #include <cstring>
 #include "Graphic.h"
 
+#define GAME_WHITE_WIN 1
+#define GAME_BLACK_WIN 2
+
 enum Color
 {
 	SPACE, BLACK, WHITE
@@ -31,6 +34,7 @@ class GameRule
 	const int dir[4][2] = { {-1,0},{0,1},{1,0},{0,-1} };
 
 	Color A[9][9];
+	int B[9][9];
 	int step;
 
 	DSU dsu;
@@ -41,6 +45,7 @@ public:
 	GameRule();
 	Color moveColor();
 	bool isLegal(int x, int y, Color col);
+	int isOver();
 	void setPiece(int x, int y, Color col);
 };
 

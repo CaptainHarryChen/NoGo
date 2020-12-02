@@ -31,3 +31,4 @@ struct Rect
 GLint LoadTexture(const char* file_name);
 void DrawTexture(Rect pos, GLint texture);
 void DrawCircleTexture(Point pos, double radius, double text_radius, GLint texture);
+void DrawTransCircle(Point pos, double radius, double R, double G, double B, double A);
