@@ -19,6 +19,21 @@
     <Filter Include="资源文件\piece">
       <UniqueIdentifier>{fb253539-d928-434c-aff7-1ad3f63f7bf8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="资源文件\menu">
+      <UniqueIdentifier>{7e772fc8-e7cb-4447-a711-9684c195579d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Game">
+      <UniqueIdentifier>{c9139f4c-89e8-4732-942a-1e8ecf6dbab1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Game">
+      <UniqueIdentifier>{685f218f-c1ef-4fc9-8107-012bf7029b1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Component">
+      <UniqueIdentifier>{bcdd736f-1705-436a-911f-98743055f27c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Component">
+      <UniqueIdentifier>{f3f4e05a-099d-4fdf-adcd-f4aca8df2227}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -30,34 +45,40 @@
     <ClCompile Include="GameScene.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="CheckerBoard.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="GameRule.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Graphic.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="CheckerBoard.cpp">
+      <Filter>源文件\Component</Filter>
+    </ClCompile>
     <ClCompile Include="GameAI.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="GameRule.cpp">
+      <Filter>源文件\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuBoard.cpp">
+      <Filter>源文件\Component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GameScene.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="CheckerBoard.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="GameRule.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Graphic.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="GameAI.h">
+      <Filter>头文件\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="GameRule.h">
+      <Filter>头文件\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="CheckerBoard.h">
+      <Filter>头文件\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="GameScene.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuBoard.h">
+      <Filter>头文件\Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -99,6 +120,9 @@
     </Image>
     <Image Include="img\piece\whitepiece.bmp">
       <Filter>资源文件\piece</Filter>
+    </Image>
+    <Image Include="img\menu\menuboard.bmp">
+      <Filter>资源文件\menu</Filter>
     </Image>
   </ItemGroup>
 </Project>

@@ -148,6 +148,7 @@
     <ClCompile Include="GameRule.cpp" />
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MenuBoard.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CheckerBoard.h" />
@@ -155,6 +156,7 @@
     <ClInclude Include="Graphic.h" />
     <ClInclude Include="GameRule.h" />
     <ClInclude Include="GameScene.h" />
+    <ClInclude Include="MenuBoard.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="img\checkerboard\board0.bmp" />
@@ -168,6 +170,7 @@
     <Image Include="img\checkerboard\board8.bmp" />
     <Image Include="img\checkerboard\board9.bmp" />
     <Image Include="img\checkerboard\checkerboard.bmp" />
+    <Image Include="img\menu\menuboard.bmp" />
     <Image Include="img\piece\blackpiece.bmp" />
     <Image Include="img\piece\whitepiece.bmp" />
   </ItemGroup>
