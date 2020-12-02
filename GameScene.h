@@ -7,6 +7,7 @@ class GameScene
 {
 	const int scene_width, scene_height;
 	
+	int game_state;
 	GameRule *pRuler;
 	GameAI* pAI;
 	CheckerBoard *pCheckerBoard;

@@ -12,6 +12,8 @@ void GameScene::Init()
 {
 	pCheckerBoard->Init();
 	pAI->Start();
+
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  //定义源因子与目的因子
 }
 
 void GameScene::Display()
@@ -34,6 +36,7 @@ void GameScene::Idle()
 		{
 			pRuler->setPiece(a.x, a.y, WHITE);
 			pCheckerBoard->setPiece(a.x, a.y, WHITE);
+			game_state = pRuler->isOver();
 		}
 	}
 	Display();
@@ -41,16 +44,30 @@ void GameScene::Idle()
 
 void GameScene::OnMouseMove(int x, int y)
 {
+	if (game_state == 0)
+	{
+		if (pCheckerBoard->in(Point(x, y)))
+			pCheckerBoard->SetMousePos(Point(x, y));
+		else
+			pCheckerBoard->SetMousePos(Point(-1, -1));
+	}
+	else
+		pCheckerBoard->SetMousePos(Point(-1, -1));
 }
 
 void GameScene::OnMouseClick(int button, int state, int x, int y)
 {
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_UP)
 	{
-		if (pCheckerBoard->in(Point(x, y)))
-			pCheckerBoard->OnMouseClick(Point(x, y));
+		if (game_state == 0)
+		{
+			if (pCheckerBoard->in(Point(x, y)))
+				pCheckerBoard->OnMouseClick(Point(x, y));
 
-		if (pRuler->moveColor() == WHITE)
-			pAI->SendMoveMessage();
+			if (pRuler->moveColor() == WHITE)
+				pAI->SendMoveMessage();
+			
+			game_state = pRuler->isOver();
+		}
 	}
 }

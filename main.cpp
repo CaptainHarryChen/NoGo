@@ -105,7 +105,7 @@ int main(int argc, char** argv)
 	glutKeyboardFunc(&OnKeyBoard);
 	glutSpecialFunc(&OnSpecialKey);
 	glutMouseFunc(&OnMouseClick);
-	glutMotionFunc(&OnMouseMove);
+	glutPassiveMotionFunc(&OnMouseMove);
 
 	glutMainLoop();
 

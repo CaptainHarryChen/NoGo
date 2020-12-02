@@ -126,3 +126,17 @@ void DrawCircleTexture(Point pos, double radius, double text_radius, GLint textu
 	glEnd();
 	glDisable(GL_TEXTURE_2D);
 }
+
+void DrawTransCircle(Point pos, double radius, double R,double G,double B,double A)
+{
+	const double M_PI = acos(-1);
+	glEnable(GL_BLEND);
+	glBegin(GL_TRIANGLE_FAN);
+	glColor4d(R, G, B, A);
+	for (int i = 0; i < CircleSegment; i++)
+	{
+		glVertex2d(pos.x - radius * cos(2 * M_PI * i / CircleSegment), pos.y - radius * sin(2 * M_PI * i / CircleSegment));
+	}
+	glEnd();
+	glDisable(GL_BLEND);
+}
