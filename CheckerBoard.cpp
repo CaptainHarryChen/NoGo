@@ -26,9 +26,6 @@ void CheckerBoard::Init()
 	img_board[9] = LoadTexture("img//checkerboard//board9.bmp");
 	img_black = LoadTexture("img//piece//blackpiece.bmp");
 	img_white = LoadTexture("img//piece//whitepiece.bmp");
-	//img_green = LoadTexture("img//piece//greenpiece.bmp");
-	//img_red = LoadTexture("img//piece//redpiece.bmp");
-
 }
 
 void CheckerBoard::Draw()
