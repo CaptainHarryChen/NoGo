@@ -1,16 +1,23 @@
 #pragma once
 #include "CheckerBoard.h"
+#include "MenuBoard.h"
 #include "GameRule.h"
 #include "GameAI.h"
+
+#define MAIN_MENU 1
+#define IN_GAME 2
+#define GAME_WHITE_WIN 3
+#define GAME_BLACK_WIN 4
 
 class GameScene
 {
 	const int scene_width, scene_height;
-	
+
 	int game_state;
-	GameRule *pRuler;
+	GameRule* pRuler;
 	GameAI* pAI;
-	CheckerBoard *pCheckerBoard;
+	CheckerBoard* pCheckerBoard;
+	MenuBoard* pMenuBoard;
 
 public:
 	GameScene(int width, int height);

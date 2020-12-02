@@ -6,11 +6,14 @@ GameScene::GameScene(int width, int height) :scene_width(width), scene_height(he
 	pRuler = new GameRule;
 	pAI = new GameAI(WHITE);
 	pCheckerBoard = new CheckerBoard(Rect(0, 0, 900, 900), pRuler, pAI);
+	pMenuBoard = new MenuBoard(Rect(900, 0, 1200, 900));
+	game_state = MAIN_MENU;
 }
 
 void GameScene::Init()
 {
 	pCheckerBoard->Init();
+	pMenuBoard->Init();
 	pAI->Start();
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  //定义源因子与目的因子
@@ -23,6 +26,7 @@ void GameScene::Display()
 	gluOrtho2D(0, scene_width, scene_height, 0);
 
 	pCheckerBoard->Draw();
+	pMenuBoard->Draw();
 
 	glutSwapBuffers();
 }
@@ -44,7 +48,7 @@ void GameScene::Idle()
 
 void GameScene::OnMouseMove(int x, int y)
 {
-	if (game_state == 0)
+	if (game_state == IN_GAME)
 	{
 		if (pCheckerBoard->in(Point(x, y)))
 			pCheckerBoard->SetMousePos(Point(x, y));
@@ -59,7 +63,7 @@ void GameScene::OnMouseClick(int button, int state, int x, int y)
 {
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_UP)
 	{
-		if (game_state == 0)
+		if (game_state == IN_GAME)
 		{
 			if (pCheckerBoard->in(Point(x, y)))
 				pCheckerBoard->OnMouseClick(Point(x, y));
