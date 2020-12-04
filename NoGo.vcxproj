@@ -149,6 +149,7 @@
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MenuBoard.cpp" />
+    <ClCompile Include="Node.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CheckerBoard.h" />
@@ -157,6 +158,7 @@
     <ClInclude Include="GameRule.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="MenuBoard.h" />
+    <ClInclude Include="Node.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="img\checkerboard\board0.bmp" />

@@ -4,6 +4,7 @@
 #include <ctime>
 #include "Graphic.h"
 #include "GameRule.h"
+#include "Node.h"
 
 class GameAI
 {
@@ -12,12 +13,11 @@ class GameAI
 
 	enum Message { NONE, END, MOVE, CALC } message;
 	Point player_move, ai_move;
-	GameRule* pRuler;
 	Color color;
 	clock_t start_time;
 	bool need_move, ready_move;
 
-	Color A[9][9];
+	Node* root;
 
 	bool ProcessMessage();
 	void Run();
@@ -25,6 +25,7 @@ class GameAI
 public:
 	GameAI(Color col);
 
+	void SetBeginningState(const Color A[9][9]);
 	void Start();
 	void End();
 	void SendMoveMessage();

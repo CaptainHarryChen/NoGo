@@ -33,6 +33,7 @@ class GameRule
 {
 	const int dir[4][2] = { {-1,0},{0,1},{1,0},{0,-1} };
 
+protected:
 	Color A[9][9];
 	int B[9][9];
 	int step;

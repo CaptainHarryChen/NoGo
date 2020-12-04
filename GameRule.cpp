@@ -126,5 +126,5 @@ void GameRule::setPiece(int x, int y, Color col)
 	r1 = dsu.Root(u);
 	dsu.hp[r1.x][r1.y] += cnt;
 	memset(B, -1, sizeof B);
-	std::cerr << "(" << x << "," << y << ")'s hp is " << dsu.hp[r1.x][r1.y] << std::endl;
+	//std::cerr << "(" << x << "," << y << ")'s hp is " << dsu.hp[r1.x][r1.y] << std::endl;
 }

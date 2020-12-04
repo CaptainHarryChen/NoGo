@@ -13,10 +13,11 @@ class CheckerBoard
 	Color board[9][9];
 	Point mouse_pos;
 	bool mouse_legal;
+	Color col_human, col_ai;
 
 public:
-	CheckerBoard(Rect _pos, GameRule *p, GameAI *pai);
-	void Init();
+	CheckerBoard(Rect _pos, GameRule* p, GameAI* pai);
+	void Init(Color c_human);
 	void Draw();
 	void SetMousePos(Point u);
 	void OnMouseClick(Point a);

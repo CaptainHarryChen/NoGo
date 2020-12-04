@@ -1,14 +1,17 @@
 #include "GameAI.h"
+#include <cstdlib>
+#include <ctime>
 
 GameAI::GameAI(Color col)
 {
-	pRuler = new GameRule;
 	color = col;
-	memset(A, 0, sizeof A);
 	message = NONE;
+	start_time = 0;
 	pMain = NULL;
 	need_move = false;
 	ready_move = false;
+
+	root = NULL;
 }
 
 bool GameAI::ProcessMessage()
@@ -23,7 +26,6 @@ bool GameAI::ProcessMessage()
 	{
 		message = NONE;
 		msg_lock.unlock();
-		A[player_move.x][player_move.y] = (color == BLACK ? WHITE : BLACK);
 	}
 	else if (message == CALC)
 	{
@@ -42,31 +44,52 @@ bool GameAI::ProcessMessage()
 
 void GameAI::Run()
 {
+	Node* cur = root;
 	for (;;)
 	{
 		if (ProcessMessage() == false)
 			break;
 		//search
-		mv_lock.lock();
-		if (need_move == true)
+		if (cur->isLeaf())
 		{
-			bool flag = false;
-			for (int i = 0; i < 9 && !flag; i++)
-				for (int j = 0; j < 9 && !flag; j++)
-					if (pRuler->isLegal(i, j, color))
-						ai_move = Point(i, j), flag = true;
-			
+			double tmp = cur->Rollout(color);
+			cur->n++;
+			cur->value += tmp;
+			while (cur != root)
+			{
+				cur = cur->father;
+				cur->n++;
+				cur->value += tmp;
+			}
+		}
+		else
+		{
+			Point t = cur->FindMax();
+			cur = cur->son[t.x][t.y];
+		}
+
+		mv_lock.lock();
+		if (need_move == true && clock() - start_time >= 900)
+		{
+			ai_move = root->FindMax();
 			need_move = false;
 			ready_move = true;
-			A[ai_move.x][ai_move.y] = color;
-			pRuler->setPiece(ai_move.x, ai_move.y, color);
 		}
 		mv_lock.unlock();
 	}
 }
 
+void GameAI::SetBeginningState(const Color A[9][9])
+{
+	root = new Node();
+	for (int i = 0; i < 9; i++)
+		for (int j = 0; j < 9; j++)
+			root->setPiece(i, j, A[i][j]);
+}
+
 void GameAI::Start()
 {
+	srand((unsigned int)time(0));
 	pMain = new std::thread(&GameAI::Run, this);
 }
 
@@ -85,7 +108,7 @@ void GameAI::SendMoveMessage()
 	msg_lock.unlock();
 }
 
-bool GameAI::GetMove(Point &res)
+bool GameAI::GetMove(Point& res)
 {
 	mv_lock.lock();
 	if (!ready_move)
@@ -105,7 +128,5 @@ void GameAI::PlayerMove(Point p)
 	message = MOVE;
 	msg_lock.unlock();
 	player_move = p;
-	pRuler->setPiece(p.x, p.y, color == WHITE ? BLACK : WHITE);
-	A[p.x][p.y] = color == WHITE ? BLACK : WHITE;
 }
 
