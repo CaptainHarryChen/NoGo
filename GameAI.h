@@ -19,12 +19,13 @@ class GameAI
 
 	Node* root;
 
-	bool ProcessMessage();
+	bool ProcessMessage(Node*& cur);
 	void Run();
 	
 public:
 	GameAI(Color col);
 
+	void SetBeginningState();
 	void SetBeginningState(const Color A[9][9]);
 	void Start();
 	void End();

@@ -9,23 +9,35 @@ Node::Node()
 	value = 0.0;
 	memset(son, 0, sizeof son);
 	father = NULL;
+	isLeaf = true;
 }
 
-bool Node::isLeaf()
+Node::Node(Node* fa, Point op)
 {
-	return n == 0;
+	n = 0;
+	value = 0.0;
+	memset(son, 0, sizeof son);
+	father = fa;
+	isLeaf = true;
+	memcpy(A, fa->A, sizeof A);
+	memcpy(&dsu, &fa->dsu, sizeof dsu);
+	step = fa->step;
+	setPiece(op.x, op.y, moveColor());
+}
+
+Node::~Node()
+{
+	for (int i = 0; i < 9; i++)
+		for (int j = 0; j < 9; j++)
+			if (son[i][j])
+				delete son[i][j];
 }
 
 double Node::UCB(int N)
 {
+	if (n == 0)
+		return 1e100;
 	return value / n + Confidence * sqrt(log(N + 1) / n);
-}
-
-double Node::CalcValue(Color col)
-{
-	if (isOver() == (int)col)
-		return 1;
-	return 0;
 }
 
 Point Node::FindMax()
@@ -44,12 +56,13 @@ void Node::Expand()
 	for (int i = 0; i < 9; i++)
 		for (int j = 0; j < 9; j++)
 			if (isLegal(i, j, moveColor()))
-				son[i][j] = new Node;
+				son[i][j] = new Node(this, Point(i, j));
+	isLeaf = false;
 }
 
 double Node::Rollout(Color my)
 {
-	Node u = *this;
+	GameRule u = *this;
 	int flag = u.isOver();
 	while (flag == 0)
 	{
@@ -59,7 +72,7 @@ double Node::Rollout(Color my)
 			for (int j = 0; j < 9; j++)
 				if (u.isLegal(i, j, c))
 					cnt++;
-		int x = rand() % cnt;
+		int x = rand() % cnt + 1;
 		for (int i = 0; i < 9 && x; i++)
 			for (int j = 0; j < 9 && x; j++)
 				if (u.isLegal(i, j, c))
@@ -70,5 +83,5 @@ double Node::Rollout(Color my)
 				}
 		flag = u.isOver();
 	}
-	return u.CalcValue(my);
+	return flag == my;
 }

@@ -142,6 +142,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Button.cpp" />
     <ClCompile Include="CheckerBoard.cpp" />
     <ClCompile Include="GameAI.cpp" />
     <ClCompile Include="Graphic.cpp" />
@@ -152,6 +153,7 @@
     <ClCompile Include="Node.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Button.h" />
     <ClInclude Include="CheckerBoard.h" />
     <ClInclude Include="GameAI.h" />
     <ClInclude Include="Graphic.h" />
@@ -161,6 +163,9 @@
     <ClInclude Include="Node.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="img\button\blackstart1.bmp" />
+    <Image Include="img\button\blackstart2.bmp" />
+    <Image Include="img\button\blackstart3.bmp" />
     <Image Include="img\checkerboard\board0.bmp" />
     <Image Include="img\checkerboard\board1.bmp" />
     <Image Include="img\checkerboard\board2.bmp" />

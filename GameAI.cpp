@@ -14,7 +14,7 @@ GameAI::GameAI(Color col)
 	root = NULL;
 }
 
-bool GameAI::ProcessMessage()
+bool GameAI::ProcessMessage(Node *&cur)
 {
 	msg_lock.lock();
 	if (message == END)
@@ -25,7 +25,13 @@ bool GameAI::ProcessMessage()
 	else if (message == MOVE)
 	{
 		message = NONE;
+		cur = root->son[player_move.x][player_move.y];
+		if (cur == NULL)
+			cur = new Node(root, player_move);
+		root->son[player_move.x][player_move.y] = NULL;
 		msg_lock.unlock();
+		delete root;
+		root = cur;
 	}
 	else if (message == CALC)
 	{
@@ -47,11 +53,13 @@ void GameAI::Run()
 	Node* cur = root;
 	for (;;)
 	{
-		if (ProcessMessage() == false)
+		if (ProcessMessage(cur) == false)
 			break;
 		//search
-		if (cur->isLeaf())
+		if (cur->isLeaf)
 		{
+			if (cur->n == 0)
+				cur->Expand();
 			double tmp = cur->Rollout(color);
 			cur->n++;
 			cur->value += tmp;
@@ -72,6 +80,12 @@ void GameAI::Run()
 		if (need_move == true && clock() - start_time >= 900)
 		{
 			ai_move = root->FindMax();
+			cur = root->son[ai_move.x][ai_move.y];
+			if (cur == NULL)
+				cur = new Node(root, ai_move);
+			root->son[ai_move.x][ai_move.y] = NULL;
+			delete root;
+			root = cur;
 			need_move = false;
 			ready_move = true;
 		}
@@ -79,12 +93,17 @@ void GameAI::Run()
 	}
 }
 
+void GameAI::SetBeginningState()
+{
+	root = new Node();
+}
 void GameAI::SetBeginningState(const Color A[9][9])
 {
 	root = new Node();
 	for (int i = 0; i < 9; i++)
 		for (int j = 0; j < 9; j++)
-			root->setPiece(i, j, A[i][j]);
+			if (A[i][j] != SPACE)
+				root->setPiece(i, j, A[i][j]);
 }
 
 void GameAI::Start()
@@ -126,7 +145,7 @@ void GameAI::PlayerMove(Point p)
 {
 	msg_lock.lock();
 	message = MOVE;
-	msg_lock.unlock();
 	player_move = p;
+	msg_lock.unlock();
 }
 

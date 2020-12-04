@@ -114,6 +114,6 @@ int main(int argc, char** argv)
 
 void ChangeXY(int x, int y, int& resx, int& resy)
 {
-	resx = (int)(1.0 * x * SCENE_WIDTH / win_w);
-	resy = (int)(1.0 * y * SCENE_HEIGHT / win_h);
+	resy = (int)(1.0 * x * SCENE_WIDTH / win_w);
+	resx = (int)(1.0 * y * SCENE_HEIGHT / win_h);
 }

@@ -11,6 +11,7 @@ bool GameRule::inBoard(Point u)
 GameRule::GameRule()
 {
 	memset(A, 0, sizeof A);
+	memset(B, -1, sizeof B);
 	step = 0;
 }
 

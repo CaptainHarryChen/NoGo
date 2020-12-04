@@ -1,6 +1,7 @@
 #pragma once
 #include "CheckerBoard.h"
 #include "MenuBoard.h"
+#include "Button.h"
 #include "GameRule.h"
 #include "GameAI.h"
 
@@ -20,7 +21,9 @@ class GameScene
 	GameAI* pAI;
 	CheckerBoard* pCheckerBoard;
 	MenuBoard* pMenuBoard;
+	Button* pStartBlack;
 
+	void StartGame(Color c);
 public:
 	GameScene(int width, int height);
 
