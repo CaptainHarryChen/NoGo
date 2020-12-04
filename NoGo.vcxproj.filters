@@ -34,6 +34,9 @@
     <Filter Include="源文件\Component">
       <UniqueIdentifier>{f3f4e05a-099d-4fdf-adcd-f4aca8df2227}</UniqueIdentifier>
     </Filter>
+    <Filter Include="资源文件\button">
+      <UniqueIdentifier>{a581bcf0-413e-4f6d-bee0-48f0e2721d50}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -63,6 +66,9 @@
     <ClCompile Include="Node.cpp">
       <Filter>源文件\Game</Filter>
     </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>源文件\Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphic.h">
@@ -85,6 +91,9 @@
     </ClInclude>
     <ClInclude Include="Node.h">
       <Filter>头文件\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>头文件\Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -129,6 +138,15 @@
     </Image>
     <Image Include="img\menu\menuboard.bmp">
       <Filter>资源文件\menu</Filter>
+    </Image>
+    <Image Include="img\button\blackstart2.bmp">
+      <Filter>资源文件\button</Filter>
+    </Image>
+    <Image Include="img\button\blackstart3.bmp">
+      <Filter>资源文件\button</Filter>
+    </Image>
+    <Image Include="img\button\blackstart1.bmp">
+      <Filter>资源文件\button</Filter>
     </Image>
   </ItemGroup>
 </Project>

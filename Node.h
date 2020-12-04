@@ -9,12 +9,13 @@ public:
 	int n;
 	double value;
 	Node* son[9][9], * father;
+	bool isLeaf;
 
 	Node();
+	Node(Node* fa, Point op);
+	~Node();
 
-	bool isLeaf();
 	double UCB(int N);
-	double CalcValue(Color col);
 	Point FindMax();
 	void Expand();
 	double Rollout(Color my);

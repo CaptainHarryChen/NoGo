@@ -16,8 +16,8 @@ class CheckerBoard
 	Color col_human, col_ai;
 
 public:
-	CheckerBoard(Rect _pos, GameRule* p, GameAI* pai);
-	void Init(Color c_human);
+	CheckerBoard(Rect _pos);
+	void Init(Color c_human, GameRule* p, GameAI* pai);
 	void Draw();
 	void SetMousePos(Point u);
 	void OnMouseClick(Point a);
