@@ -8,12 +8,11 @@ CheckerBoard::CheckerBoard(Rect _pos, GameRule* p, GameAI* pai)
 	img_black = img_white = 0;
 	pRuler = p;
 	pAI = pai;
+	col_human = BLACK;
+	col_ai = WHITE;
 	memset(board, 0, sizeof board);
 	mouse_pos = Point(-1, -1);
-}
 
-void CheckerBoard::Init()
-{
 	img_board[0] = LoadTexture("img//checkerboard//board0.bmp");
 	img_board[1] = LoadTexture("img//checkerboard//board1.bmp");
 	img_board[2] = LoadTexture("img//checkerboard//board2.bmp");
@@ -26,6 +25,13 @@ void CheckerBoard::Init()
 	img_board[9] = LoadTexture("img//checkerboard//board9.bmp");
 	img_black = LoadTexture("img//piece//blackpiece.bmp");
 	img_white = LoadTexture("img//piece//whitepiece.bmp");
+}
+
+void CheckerBoard::Init(Color c_human)
+{
+	col_human = c_human;
+	col_ai = c_human == BLACK ? WHITE : BLACK;
+	memset(board, 0, sizeof board);
 }
 
 void CheckerBoard::Draw()
@@ -77,7 +83,7 @@ void CheckerBoard::SetMousePos(Point u)
 		int w = (pos.rx - pos.lx) / 9, h = (pos.ry - pos.ly) / 9;
 		int x = u.x / w, y = u.y / h;
 		mouse_pos = Point(x, y);
-		mouse_legal = pRuler->isLegal(x, y, BLACK);
+		mouse_legal = pRuler->isLegal(x, y, col_human);
 	}
 	else
 		mouse_pos = Point(-1, -1);
@@ -87,11 +93,11 @@ void CheckerBoard::OnMouseClick(Point a)
 {
 	int w = (pos.rx - pos.lx) / 9, h = (pos.ry - pos.ly) / 9;
 	int x = a.x / w, y = a.y / h;
-	if (pRuler->isLegal(x, y, BLACK))
+	if (pRuler->isLegal(x, y, col_human))
 	{
-		pRuler->setPiece(x, y, BLACK);
+		pRuler->setPiece(x, y, col_human);
 		pAI->PlayerMove(Point(x,y));
-		board[x][y] = BLACK;
+		board[x][y] = col_human;
 	}
 }
 

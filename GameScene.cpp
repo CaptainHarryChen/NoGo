@@ -3,20 +3,22 @@
 
 GameScene::GameScene(int width, int height) :scene_width(width), scene_height(height)
 {
+	pAI = NULL;
 	pRuler = new GameRule;
-	pAI = new GameAI(WHITE);
 	pCheckerBoard = new CheckerBoard(Rect(0, 0, 900, 900), pRuler, pAI);
 	pMenuBoard = new MenuBoard(Rect(900, 0, 1200, 900));
+
 	game_state = MAIN_MENU;
+	col_human = BLACK;
+	col_ai = WHITE;
 }
 
 void GameScene::Init()
 {
-	pCheckerBoard->Init();
+	//pCheckerBoard->Init();
 	pMenuBoard->Init();
-	pAI->Start();
 
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  //定义源因子与目的因子
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
 }
 
 void GameScene::Display()
@@ -33,13 +35,13 @@ void GameScene::Display()
 
 void GameScene::Idle()
 {
-	if (pRuler->moveColor() == WHITE)
+	if (pRuler->moveColor() == col_ai)
 	{
 		Point a;
 		if (pAI->GetMove(a) == true)
 		{
-			pRuler->setPiece(a.x, a.y, WHITE);
-			pCheckerBoard->setPiece(a.x, a.y, WHITE);
+			pRuler->setPiece(a.x, a.y, col_ai);
+			pCheckerBoard->setPiece(a.x, a.y, col_ai);
 			game_state = pRuler->isOver();
 		}
 	}
@@ -68,7 +70,7 @@ void GameScene::OnMouseClick(int button, int state, int x, int y)
 			if (pCheckerBoard->in(Point(x, y)))
 				pCheckerBoard->OnMouseClick(Point(x, y));
 
-			if (pRuler->moveColor() == WHITE)
+			if (pRuler->moveColor() == col_ai)
 				pAI->SendMoveMessage();
 			
 			game_state = pRuler->isOver();

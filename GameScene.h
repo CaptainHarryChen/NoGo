@@ -14,6 +14,8 @@ class GameScene
 	const int scene_width, scene_height;
 
 	int game_state;
+	Color col_human, col_ai;
+
 	GameRule* pRuler;
 	GameAI* pAI;
 	CheckerBoard* pCheckerBoard;

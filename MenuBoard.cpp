@@ -4,11 +4,12 @@ MenuBoard::MenuBoard(Rect _pos)
 {
 	pos = _pos;
 	img_board = 0;
+	img_board = LoadTexture("img//menu//menuboard.bmp");
 }
 
 void MenuBoard::Init()
 {
-	img_board = LoadTexture("img//menu//menuboard.bmp");
+	
 }
 
 void MenuBoard::Draw()

@@ -60,6 +60,9 @@
     <ClCompile Include="MenuBoard.cpp">
       <Filter>源文件\Component</Filter>
     </ClCompile>
+    <ClCompile Include="Node.cpp">
+      <Filter>源文件\Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphic.h">
@@ -79,6 +82,9 @@
     </ClInclude>
     <ClInclude Include="MenuBoard.h">
       <Filter>头文件\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Node.h">
+      <Filter>头文件\Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
