@@ -58,7 +58,9 @@ void GameScene::Idle()
 			{
 				pRuler->setPiece(a.x, a.y, col_ai);
 				pCheckerBoard->setPiece(a.x, a.y, col_ai);
-				game_state = pRuler->isOver();
+				int tmp = pRuler->isOver();
+				if (tmp)
+					game_state = tmp;
 			}
 		}
 	}

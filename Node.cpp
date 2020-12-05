@@ -43,11 +43,11 @@ double Node::UCB(int N)
 Point Node::FindMax()
 {
 	double mx = -1e100;
-		Point res;
-		for (int i = 0; i < 9; i++)
-			for (int j = 0; j < 9; j++)
-				if (son[i][j] && son[i][j]->UCB(n) > mx)
-					mx = son[i][j]->UCB(n), res = Point(i, j);
+	Point res;
+	for (int i = 0; i < 9; i++)
+		for (int j = 0; j < 9; j++)
+			if (son[i][j] && son[i][j]->UCB(n) > mx)
+				mx = son[i][j]->UCB(n), res = Point(i, j);
 	return res;
 }
 
@@ -56,8 +56,10 @@ void Node::Expand()
 	for (int i = 0; i < 9; i++)
 		for (int j = 0; j < 9; j++)
 			if (isLegal(i, j, moveColor()))
+			{
 				son[i][j] = new Node(this, Point(i, j));
-	isLeaf = false;
+				isLeaf = false;
+			}
 }
 
 double Node::Rollout(Color my)
