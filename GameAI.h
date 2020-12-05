@@ -2,6 +2,7 @@
 #include <thread>
 #include <mutex>
 #include <ctime>
+#include <queue>
 #include "Graphic.h"
 #include "GameRule.h"
 #include "Node.h"
@@ -11,7 +12,9 @@ class GameAI
 	std::thread* pMain;
 	std::mutex msg_lock,mv_lock;
 
-	enum Message { NONE, END, MOVE, CALC } message;
+	enum Message { END, MOVE, CALC };
+
+	std::queue<Message> qmsg;
 	Point player_move, ai_move;
 	Color color;
 	clock_t start_time;

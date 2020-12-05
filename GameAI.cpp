@@ -5,7 +5,6 @@
 GameAI::GameAI(Color col)
 {
 	color = col;
-	message = NONE;
 	start_time = 0;
 	pMain = NULL;
 	need_move = false;
@@ -16,35 +15,37 @@ GameAI::GameAI(Color col)
 
 bool GameAI::ProcessMessage(Node *&cur)
 {
-	msg_lock.lock();
-	if (message == END)
+	for (;;)
 	{
+		msg_lock.lock();
+		if (qmsg.empty())
+		{
+			msg_lock.unlock();
+			break;
+		}
+		Message message = qmsg.front();
+		qmsg.pop();
 		msg_lock.unlock();
-		return false;
+		if (message == END)
+			return false;
+		else if (message == MOVE)
+		{
+			cur = root->son[player_move.x][player_move.y];
+			if (cur == NULL)
+				cur = new Node(root, player_move);
+			root->son[player_move.x][player_move.y] = NULL;
+			delete root;
+			root = cur;
+		}
+		else if (message == CALC)
+		{
+			start_time = clock();
+			mv_lock.lock();
+			need_move = true;
+			ready_move = false;
+			mv_lock.unlock();
+		}
 	}
-	else if (message == MOVE)
-	{
-		message = NONE;
-		cur = root->son[player_move.x][player_move.y];
-		if (cur == NULL)
-			cur = new Node(root, player_move);
-		root->son[player_move.x][player_move.y] = NULL;
-		msg_lock.unlock();
-		delete root;
-		root = cur;
-	}
-	else if (message == CALC)
-	{
-		message = NONE;
-		msg_lock.unlock();
-		start_time = clock();
-		mv_lock.lock();
-		need_move = true;
-		ready_move = false;
-		mv_lock.unlock();
-	}
-	else
-		msg_lock.unlock();
 	return true;
 }
 
@@ -115,7 +116,7 @@ void GameAI::Start()
 void GameAI::End()
 {
 	msg_lock.lock();
-	message = END;
+	qmsg.push(END);
 	msg_lock.unlock();
 	pMain->join();
 }
@@ -123,7 +124,7 @@ void GameAI::End()
 void GameAI::SendMoveMessage()
 {
 	msg_lock.lock();
-	message = CALC;
+	qmsg.push(CALC);
 	msg_lock.unlock();
 }
 
@@ -144,7 +145,7 @@ bool GameAI::GetMove(Point& res)
 void GameAI::PlayerMove(Point p)
 {
 	msg_lock.lock();
-	message = MOVE;
+	qmsg.push(MOVE);
 	player_move = p;
 	msg_lock.unlock();
 }
