@@ -1,6 +1,7 @@
 #include "GameAI.h"
 #include <cstdlib>
 #include <ctime>
+#include <iostream>
 
 GameAI::GameAI(Color col)
 {
@@ -70,6 +71,7 @@ void GameAI::Run()
 				cur->n++;
 				cur->value += tmp;
 			}
+			std::cerr << "Root search times:" << root->n << std::endl;
 		}
 		else
 		{
@@ -78,12 +80,16 @@ void GameAI::Run()
 		}
 
 		mv_lock.lock();
-		if (need_move == true && clock() - start_time >= 900)
+		if (need_move == true && clock() - start_time >= 2000)
 		{
+			
 			ai_move = root->FindMax();
 			cur = root->son[ai_move.x][ai_move.y];
 			if (cur == NULL)
 				cur = new Node(root, ai_move);
+			std::cerr << "Search times:" << cur->n << std::endl;
+			std::cerr << "Move (" << ai_move.x << "," << ai_move.y << ")" << std::endl;
+			std::cerr << "value:" << cur->value / cur->n << "  UCB:" << cur->UCB(root->n) << std::endl;
 			root->son[ai_move.x][ai_move.y] = NULL;
 			delete root;
 			root = cur;

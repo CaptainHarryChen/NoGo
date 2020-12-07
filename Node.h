@@ -1,6 +1,8 @@
 #pragma once
 #include "GameRule.h"
 
+#define MAX_ROLLOUT_STEP 5
+
 class Node :public GameRule
 {
 	const double Confidence = 2.0;

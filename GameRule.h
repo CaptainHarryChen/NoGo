@@ -35,7 +35,6 @@ class GameRule
 
 protected:
 	Color A[9][9];
-	int B[9][9];
 	int step;
 
 	DSU dsu;
@@ -48,5 +47,6 @@ public:
 	bool isLegal(int x, int y, Color col);
 	int isOver();
 	void setPiece(int x, int y, Color col);
+	double Evaluate(Color my);
 };
 
