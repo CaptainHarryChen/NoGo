@@ -11,7 +11,6 @@ bool GameRule::inBoard(Point u)
 GameRule::GameRule()
 {
 	memset(A, 0, sizeof A);
-	memset(B, -1, sizeof B);
 	step = 0;
 }
 
@@ -22,13 +21,11 @@ Color GameRule::moveColor()
 
 bool GameRule::isLegal(int x, int y, Color col)
 {
-	if (B[x][y] != -1)
-		return (B[x][y] & (1 << (col - 1))) != 0;
 	//std::cerr << "Check move (" << x << "," << y << "," << col << ")" << std::endl;
 	if (step == 0 && x == 4 && y == 4)
 		return false;
-	if (moveColor() != col)
-		return false;
+	//if (moveColor() != col)
+	//	return false;
 	if (A[x][y] != SPACE)
 		return false;
 
@@ -88,7 +85,6 @@ int GameRule::isOver()
 				t |= 1, cnt1++;
 			if (isLegal(i, j, WHITE))
 				t |= 2, cnt2++;
-			B[i][j] = t;
 		}
 	if (moveColor() == BLACK && cnt1 == 0)
 		return GAME_WHITE_WIN;
@@ -126,6 +122,23 @@ void GameRule::setPiece(int x, int y, Color col)
 	}
 	r1 = dsu.Root(u);
 	dsu.hp[r1.x][r1.y] += cnt;
-	memset(B, -1, sizeof B);
 	//std::cerr << "(" << x << "," << y << ")'s hp is " << dsu.hp[r1.x][r1.y] << std::endl;
+}
+
+double GameRule::Evaluate(Color my)
+{
+	double ret = 0;
+	for (int i = 0; i < 9; i++)
+		for (int j = 0; j < 9; j++)
+			if (A[i][j] == SPACE)
+			{
+				bool f1 = isLegal(i, j, my), f2 = isLegal(i, j, my == WHITE ? BLACK : WHITE);
+				if (f1 && !f2)
+					ret++;
+				if (!f1 && f2)
+					ret--;
+			}
+	if (ret < 0)
+		return 10000.0 - ret * ret;
+	return 10000.0 + ret * ret;
 }
