@@ -139,6 +139,6 @@ double GameRule::Evaluate(Color my)
 					ret--;
 			}
 	if (ret < 0)
-		return 10000.0 - ret * ret;
-	return 10000.0 + ret * ret;
+		return -ret * ret;
+	return ret * ret;
 }
