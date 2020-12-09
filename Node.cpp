@@ -72,32 +72,20 @@ double Node::Rollout(Color my)
 	{
 		step--;
 		Color c = u.moveColor();
-		//double tot = 0;
-		double mx = 0;
+		int cnt = 0;
 		for (int i = 0; i < 9; i++)
 			for (int j = 0; j < 9; j++)
-			{
-				//val[i][j] = 0;
+				if (u.isLegal(i, j, c))
+					cnt++;
+		int x = rand() % cnt + 1;
+		for (int i = 0; i < 9 && x; i++)
+			for (int j = 0; j < 9 && x; j++)
 				if (u.isLegal(i, j, c))
 				{
-					GameRule v = u;
-					v.setPiece(i, j, c);
-					double t = v.Evaluate(c);
-					if (t > mx)
-						mx = t, mv = Point(i, j);
-					//val[i][j] = v.Evaluate(c);
-					//tot += val[i][j];
+					x--;
+					if (x == 0)
+						u.setPiece(i, j, c);
 				}
-			}
-		u.setPiece(mv.x, mv.y, c);
-		/*double x = (1LL * rand() * rand() % 1000000) / 1000000.0;
-		for (int i = 0; i < 9 && x >= 1e-10; i++)
-			for (int j = 0; j < 9 && x >= 1e-10; j++)
-			{
-				x -= val[i][j] / tot;
-				if (x < 1e10)
-					u.setPiece(i, j, c);
-			}*/
 		flag = u.isOver();
 	}
 	return u.Evaluate(my);

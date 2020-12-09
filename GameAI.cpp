@@ -62,16 +62,18 @@ void GameAI::Run()
 		{
 			if (cur->n == 0)
 				cur->Expand();
-			double tmp = cur->Rollout(color);
+			double tmp = cur->Rollout(cur->moveColor());
+			int sig = -1;
 			cur->n++;
-			cur->value += tmp;
+			cur->value += tmp * sig;
 			while (cur != root)
 			{
 				cur = cur->father;
 				cur->n++;
-				cur->value += tmp;
+				sig *= -1;
+				cur->value += tmp * sig;
 			}
-			std::cerr << "Root search times:" << root->n << std::endl;
+			//std::cerr << "Root search times:" << root->n << std::endl;
 		}
 		else
 		{
@@ -80,7 +82,7 @@ void GameAI::Run()
 		}
 
 		mv_lock.lock();
-		if (need_move == true && clock() - start_time >= 2000)
+		if (need_move == true && clock() - start_time >= 950)
 		{
 			
 			ai_move = root->FindMax();
