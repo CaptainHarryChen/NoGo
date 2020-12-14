@@ -9,84 +9,70 @@ GameAI::GameAI(Color col)
 	pMain = NULL;
 	need_move = false;
 	ready_move = false;
-
 	root = NULL;
 }
 
-bool GameAI::ProcessMessage(Node *&cur)
+void GameAI::Search(Node* u, int step = 0)
 {
-	for (;;)
+	if (step >= MAX_SEARCH_STEP)
 	{
-		msg_lock.lock();
-		if (qmsg.empty())
-		{
-			msg_lock.unlock();
-			break;
-		}
-		Message message = qmsg.front();
-		qmsg.pop();
-		msg_lock.unlock();
-		if (message == END)
-			return false;
-		else if (message == MOVE)
-		{
-			cur = root->son[player_move.x][player_move.y];
-			if (cur == NULL)
-				cur = new Node(root, player_move);
-			root->son[player_move.x][player_move.y] = NULL;
-			delete root;
-			root = cur;
-		}
-		else if (message == CALC)
-		{
-			start_time = clock();
-			mv_lock.lock();
-			need_move = true;
-			ready_move = false;
-			mv_lock.unlock();
-		}
+		u->value = u->Evaluate(color);
+		return;
 	}
-	return true;
+	bool flag = u->moveColor() == color;
+	if (flag)
+		u->value = 0;
+	else
+		u->value = 1e100;
+	for(int i=0;i<9;i++)
+		for(int j=0;j<9;j++)
+			if (u->isLegal(i, j, u->moveColor()))
+			{
+				Node* v = new Node(u, Point(i, j));
+				Search(v, step + 1);
+				if ((flag && v->value > u->value) || (!flag && v->value < u->value))
+					u->value = v->value, v->bestop = Point(i, j);
+				delete v;
+			}
 }
 
 void GameAI::Run()
 {
-	Node* cur = root;
 	for (;;)
 	{
-		if (ProcessMessage(cur) == false)
-			break;
-		//search
-		if (cur->isLeaf)
+		//Process Message
+		for (;;)
 		{
-			if (cur->n == 0)
-				cur->Expand();
-			double tmp = cur->Rollout(color);
-			cur->n++;
-			cur->value += tmp;
-			while (cur != root)
+			msg_lock.lock();
+			if (qmsg.empty())
 			{
-				cur = cur->father;
-				cur->n++;
-				cur->value += tmp;
+				msg_lock.unlock();
+				break;
+			}
+			Message message = qmsg.front();
+			qmsg.pop();
+			msg_lock.unlock();
+			if (message == END)
+				break;
+			else if (message == MOVE)
+			{
+				root->setPiece(player_move.x, player_move.y, root->moveColor());
+			}
+			else if (message == CALC)
+			{
+				start_time = clock();
+				mv_lock.lock();
+				need_move = true;
+				ready_move = false;
+				mv_lock.unlock();
 			}
 		}
-		else
-		{
-			Point t = cur->FindMax();
-			cur = cur->son[t.x][t.y];
-		}
-
 		mv_lock.lock();
-		if (need_move == true && clock() - start_time >= 900)
+		//´¦ÀíÒÆ¶¯
+		if (need_move == true)
 		{
-			ai_move = root->FindMax();
-			cur = root->son[ai_move.x][ai_move.y];
-			if (cur == NULL)
-				cur = new Node(root, ai_move);
-			root->son[ai_move.x][ai_move.y] = NULL;
-			delete root;
-			root = cur;
+			Search(root);
+			ai_move = root->bestop;
 			need_move = false;
 			ready_move = true;
 		}
