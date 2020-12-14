@@ -1,6 +1,8 @@
 #pragma once
 #include <GL/glut.h>
 #include <cmath>
+#include <algorithm>
+#include <iostream>
 
 const int CircleSegment = 50;
 

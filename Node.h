@@ -3,21 +3,21 @@
 
 class Node :public GameRule
 {
-	const double Confidence = 2.0;
-
 public:
 	int n;
 	double value;
 	Node* son[9][9], * father;
-	bool isLeaf;
+	Point last_op;
 
 	Node();
 	Node(Node* fa, Point op);
-	~Node();
 
-	double UCB(int N);
-	Point FindMax();
-	void Expand();
-	double Rollout(Color my);
+	void Release();
+
+	void NextOp();
+	bool Finish();
+	Point FindMaxValue();
+	void UpdateValue(double val, bool mode);
+	double Evaluate(Color my);
 };
 
