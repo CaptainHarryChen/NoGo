@@ -23,18 +23,31 @@ void GameAI::Search(Node* u, int step = 0)
 	}
 	bool flag = u->moveColor() == color;
 	if (flag)
-		u->value = 0;
+		u->value = -1e100;
 	else
 		u->value = 1e100;
+	memset(u->B, -1, sizeof u->B);
+	static Color tmp[9][9];
+	memcpy(tmp, u->A, sizeof tmp);
+	memset(u->A, 0, sizeof u->A);
+	u->dsu.Reset();
+	u->step = 0;
+	for (int i = 0; i < 9; i++)
+		for (int j = 0; j < 9; j++)
+			if (tmp[i][j] != SPACE)
+				u->setPiece(i, j, tmp[i][j]);
+	Node v = *u;
+	v.step++;
+	Color mv = u->moveColor();
 	for(int i=0;i<9;i++)
 		for(int j=0;j<9;j++)
-			if (u->isLegal(i, j, u->moveColor()))
+			if (u->isLegal(i, j, mv))
 			{
-				Node* v = new Node(u, Point(i, j));
-				Search(v, step + 1);
-				if ((flag && v->value > u->value) || (!flag && v->value < u->value))
-					u->value = v->value, u->bestop = Point(i, j);
-				delete v;
+				v.A[i][j] = mv;
+				Search(&v, step + 1);
+				if ((flag && v.value > u->value) || (!flag && v.value < u->value))
+					u->value = v.value, u->bestop = Point(i, j);
+				v.A[i][j] = SPACE;
 			}
 }
 
