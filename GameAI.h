@@ -7,6 +7,8 @@
 #include "GameRule.h"
 #include "Node.h"
 
+#define MAX_SEARCH_STEP 5
+
 class GameAI
 {
 	std::thread* pMain;
@@ -22,7 +24,7 @@ class GameAI
 
 	Node* root;
 
-	bool ProcessMessage(Node*& cur);
+	void Search(Node* u, int step = 0);
 	void Run();
 	
 public:
