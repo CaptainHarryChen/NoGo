@@ -32,3 +32,14 @@ double Node::Evaluate(Color my)
 			}
 	return ret;
 }
+
+void Node::debug()
+{
+	std::cerr << "Debug:" << this << std::endl;
+	for (int i = 0; i < 9; i++)
+	{
+		for (int j = 0; j < 9; j++)
+			std::cerr << (int)A[i][j];
+		std::cerr << std::endl;
+	}
+}

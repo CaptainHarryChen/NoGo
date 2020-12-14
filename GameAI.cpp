@@ -17,6 +17,8 @@ void GameAI::Search(Node* u, int step = 0)
 	if (step >= MAX_SEARCH_STEP)
 	{
 		u->value = u->Evaluate(color);
+		//u->debug();
+		//std::cerr << "Finish search:" << u->value << std::endl;
 		return;
 	}
 	bool flag = u->moveColor() == color;
@@ -31,7 +33,7 @@ void GameAI::Search(Node* u, int step = 0)
 				Node* v = new Node(u, Point(i, j));
 				Search(v, step + 1);
 				if ((flag && v->value > u->value) || (!flag && v->value < u->value))
-					u->value = v->value, v->bestop = Point(i, j);
+					u->value = v->value, u->bestop = Point(i, j);
 				delete v;
 			}
 }
@@ -71,12 +73,17 @@ void GameAI::Run()
 		//´¦ÀíÒÆ¶¯
 		if (need_move == true)
 		{
+			mv_lock.unlock();
 			Search(root);
 			ai_move = root->bestop;
+			root->setPiece(ai_move.x, ai_move.y, root->moveColor());
+			mv_lock.lock();
 			need_move = false;
 			ready_move = true;
+			mv_lock.unlock();
 		}
-		mv_lock.unlock();
+		else
+			mv_lock.unlock();
 	}
 }
 
