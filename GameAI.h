@@ -7,7 +7,7 @@
 #include "GameRule.h"
 #include "Node.h"
 
-#define MAX_SEARCH_STEP 5
+#define MAX_SEARCH_STEP 3
 
 class GameAI
 {
@@ -24,7 +24,7 @@ class GameAI
 
 	Node* root;
 
-	void Search(Node* u, int step = 0);
+	void Search(Node* u, int step);
 	void Run();
 	
 public:
