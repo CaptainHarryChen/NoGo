@@ -12,7 +12,6 @@ Node::Node(Node* fa, Point op)
 {
 	value = 0.0;
 	memcpy(A, fa->A, sizeof A);
-	memcpy(&dsu, &fa->dsu, sizeof dsu);
 	step = fa->step;
 	setPiece(op.x, op.y, moveColor());
 }

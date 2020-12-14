@@ -11,8 +11,26 @@ bool GameRule::inBoard(Point u)
 GameRule::GameRule()
 {
 	memset(A, 0, sizeof A);
-	memset(B, -1, sizeof B);
 	step = 0;
+}
+
+bool GameRule::dfs_air(int fx, int fy)
+{
+	dfs_air_visit[fx][fy] = true;
+	bool flag = false;
+	for (int d = 0; d < 4; d++)
+	{
+		int dx = fx + dir[d][0], dy = fy + dir[d][1];
+		if (inBoard(Point(dx, dy)))
+		{
+			if (A[dx][dy] == SPACE)
+				flag = true;
+			if (A[dx][dy] == A[fx][fy] && !dfs_air_visit[dx][dy])
+				if (dfs_air(dx, dy))
+					flag = true;
+		}
+	}
+	return flag;
 }
 
 Color GameRule::moveColor()
@@ -20,10 +38,9 @@ Color GameRule::moveColor()
 	return step % 2 == 0 ? Color::BLACK : Color::WHITE;
 }
 
+//true: available
 bool GameRule::isLegal(int x, int y, Color col)
 {
-	if (B[x][y] != -1)
-		return (B[x][y] & (1 << (col - 1))) != 0;
 	//std::cerr << "Check move (" << x << "," << y << "," << col << ")" << std::endl;
 	if (step == 0 && x == 4 && y == 4)
 		return false;
@@ -31,49 +48,27 @@ bool GameRule::isLegal(int x, int y, Color col)
 		return false;
 	if (A[x][y] != SPACE)
 		return false;
-
-	bool has_hp = false, dead = false;
+	A[x][y] = col;
+	memset(dfs_air_visit, 0, sizeof(dfs_air_visit));
+	if (!dfs_air(x, y))
+	{
+		A[x][y] = SPACE;
+		return false;
+	}
 	for (int d = 0; d < 4; d++)
 	{
-		Point v(x + dir[d][0], y + dir[d][1]);
-		if (inBoard(v))
+		int dx = x + dir[d][0], dy = y + dir[d][1];
+		if (inBoard(Point(dx, dy)))
 		{
-			if (A[v.x][v.y] == SPACE)
-				has_hp = true;
-			else
-			{
-				v = dsu.Root(v);
-				dsu.hp[v.x][v.y]--;
-			}
+			if (A[dx][dy] != SPACE && !dfs_air_visit[dx][dy])
+				if (!dfs_air(dx, dy))
+				{
+					A[x][y] = SPACE;
+					return false;
+				}
 		}
 	}
-	int sum = 0;
-	for (int d = 0; d < 4; d++)
-	{
-		Point v(x + dir[d][0], y + dir[d][1]);
-		if (inBoard(v) && A[v.x][v.y] != SPACE)
-		{
-			if (A[v.x][v.y] != col)
-			{
-				v = dsu.Root(v);
-				if (dsu.hp[v.x][v.y] <= 0)
-					dead = true;
-			}
-			if (A[v.x][v.y] == col)
-			{
-				v = dsu.Root(v);
-				sum += dsu.hp[v.x][v.y];
-			}
-			dsu.hp[v.x][v.y]++;
-		}
-	}
-	
-	if (dead)
-		return false;
-	if (!has_hp && sum <= 0)
-		return false;
-
-	//std::cerr << "is legal move" << std::endl;
+	A[x][y] = SPACE;
 	return true;
 }
 
@@ -88,7 +83,6 @@ int GameRule::isOver()
 				t |= 1, cnt1++;
 			if (isLegal(i, j, WHITE))
 				t |= 2, cnt2++;
-			B[i][j] = t;
 		}
 	if (moveColor() == BLACK && cnt1 == 0)
 		return GAME_WHITE_WIN;
@@ -101,31 +95,4 @@ void GameRule::setPiece(int x, int y, Color col)
 {
 	step++;
 	A[x][y] = col;
-	dsu.hp[x][y] = 0;
-	Point u(x, y), r1, r2;
-	int cnt = 0;
-	for (int d = 0; d < 4; d++)
-	{
-		Point v(x + dir[d][0], y + dir[d][1]);
-		if (inBoard(v))
-		{
-			if (A[v.x][v.y] != SPACE)
-			{
-				r1 = dsu.Root(u);
-				r2 = dsu.Root(v);
-				dsu.hp[r2.x][r2.y]--;
-				if (A[v.x][v.y] == col && !(r1 == r2))
-				{
-					dsu.fa[r1.x][r1.y] = r2;
-					dsu.hp[r2.x][r2.y] += dsu.hp[r1.x][r1.y];
-				}
-			}
-			else
-				cnt++;
-		}
-	}
-	r1 = dsu.Root(u);
-	dsu.hp[r1.x][r1.y] += cnt;
-	memset(B, -1, sizeof B);
-	//std::cerr << "(" << x << "," << y << ")'s hp is " << dsu.hp[r1.x][r1.y] << std::endl;
 }
