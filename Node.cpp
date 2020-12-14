@@ -6,84 +6,84 @@
 Node::Node()
 {
 	n = 0;
-	value = 0.0;
+	value = -1;
+	last_op = Point(-1, 9);
 	memset(son, 0, sizeof son);
 	father = NULL;
-	isLeaf = true;
 }
 
 Node::Node(Node* fa, Point op)
 {
 	n = 0;
-	value = 0.0;
+	value = -1;
+	last_op = Point(-1, 9);
 	memset(son, 0, sizeof son);
 	father = fa;
-	isLeaf = true;
 	memcpy(A, fa->A, sizeof A);
 	memcpy(&dsu, &fa->dsu, sizeof dsu);
 	step = fa->step;
 	setPiece(op.x, op.y, moveColor());
 }
 
-Node::~Node()
+void Node::Release()
 {
 	for (int i = 0; i < 9; i++)
 		for (int j = 0; j < 9; j++)
 			if (son[i][j])
+			{
+				son[i][j]->Release();
 				delete son[i][j];
+			}
 }
 
-double Node::UCB(int N)
+void Node::NextOp()
 {
-	if (n == 0)
-		return 1e100;
-	return value / n + Confidence * sqrt(log(N + 1) / n);
+	do
+	{
+		last_op.y++;
+		if (last_op.y > 8)
+			last_op.x++, last_op.y = 0;
+		if (last_op.x < 9 && isLegal(last_op.x, last_op.y, moveColor()))
+			return;
+	} while (last_op.x < 9);
 }
 
-Point Node::FindMax()
+bool Node::Finish()
+{
+	return last_op.x > 8;
+}
+
+Point Node::FindMaxValue()
 {
 	double mx = -1e100;
 	Point res;
 	for (int i = 0; i < 9; i++)
 		for (int j = 0; j < 9; j++)
-			if (son[i][j] && son[i][j]->UCB(n) > mx)
-				mx = son[i][j]->UCB(n), res = Point(i, j);
+			if (son[i][j] && son[i][j]->value > mx)
+				mx = son[i][j]->value, res = Point(i, j);
 	return res;
 }
 
-void Node::Expand()
+void Node::UpdateValue(double val, bool mode)
 {
-	for (int i = 0; i < 9; i++)
-		for (int j = 0; j < 9; j++)
-			if (isLegal(i, j, moveColor()))
-			{
-				son[i][j] = new Node(this, Point(i, j));
-				isLeaf = false;
-			}
+	if (value == -1)
+		value = val;
+	else
+		value = mode ? std::max(value, val) : std::min(value, val);
 }
 
-double Node::Rollout(Color my)
+double Node::Evaluate(Color my)
 {
-	GameRule u = *this;
-	int flag = u.isOver();
-	while (flag == 0)
-	{
-		Color c = u.moveColor();
-		int cnt = 0;
-		for (int i = 0; i < 9; i++)
-			for (int j = 0; j < 9; j++)
-				if (u.isLegal(i, j, c))
-					cnt++;
-		int x = rand() % cnt + 1;
-		for (int i = 0; i < 9 && x; i++)
-			for (int j = 0; j < 9 && x; j++)
-				if (u.isLegal(i, j, c))
-				{
-					x--;
-					if (x == 0)
-						u.setPiece(i, j, c);
-				}
-		flag = u.isOver();
-	}
-	return flag == my;
+	double ret = 0;
+	for (int i = 0; i < 9; i++)
+		for (int j = 0; j < 9; j++)
+			if (A[i][j] == SPACE)
+			{
+				bool f1 = isLegal(i, j, my), f2 = isLegal(i, j, my == WHITE ? BLACK : WHITE);
+				if (f1 && !f2)
+					ret++;
+				if (!f1 && f2)
+					ret--;
+			}
+	return ret;
 }

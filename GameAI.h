@@ -7,6 +7,8 @@
 #include "GameRule.h"
 #include "Node.h"
 
+#define MAX_SEARCH_STEP 5
+
 class GameAI
 {
 	std::thread* pMain;
@@ -19,10 +21,10 @@ class GameAI
 	Color color;
 	clock_t start_time;
 	bool need_move, ready_move;
+	int search_step;
 
 	Node* root;
 
-	bool ProcessMessage(Node*& cur);
 	void Run();
 	
 public:
