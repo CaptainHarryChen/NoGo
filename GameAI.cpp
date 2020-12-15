@@ -12,6 +12,11 @@ GameAI::GameAI(Color col)
 	root = nullptr;
 }
 
+GameAI::~GameAI()
+{
+	this->End();
+}
+
 void GameAI::Search(Node* u, int step = 0)
 {
 	if (step >= MAX_SEARCH_STEP)
@@ -53,7 +58,8 @@ void GameAI::Search(Node* u, int step = 0)
 
 void GameAI::Run()
 {
-	for (;;)
+	bool bQuit = false;
+	while(!bQuit)
 	{
 		//Process Message
 		for (;;)
@@ -64,7 +70,10 @@ void GameAI::Run()
 				break;
 
 			if (message == Message::END)
+			{
+				bQuit = true;
 				break;
+			}
 			else if (message == Message::MOVE)
 			{
 				root->setPiece(player_move.x, player_move.y, root->moveColor());
@@ -77,28 +86,30 @@ void GameAI::Run()
 				ready_move = false;
 			}
 		}
-		std::unique_lock <std::mutex> lg(this->mv_lock);
+		
 		//´¦ÀíÒÆ¶¯
 		if (need_move == true)
 		{
-			lg.unlock();
-			Search(root);
+			Search(root.get());
 			ai_move = root->bestop;
 			root->setPiece(ai_move.x, ai_move.y, root->moveColor());
-			lg.lock();
+
+			std::lock_guard <std::mutex> lg(this->mv_lock);
 			need_move = false;
 			ready_move = true;
 		}
+		else
+			std::this_thread::yield();
 	}
 }
 
 void GameAI::SetBeginningState()
 {
-	root = new Node();
+	root = std::make_shared<Node>();
 }
 void GameAI::SetBeginningState(const Color A[9][9])
 {
-	root = new Node();
+	root = std::make_shared<Node>();
 	for (int i = 0; i < 9; i++)
 		for (int j = 0; j < 9; j++)
 			if (A[i][j] != Color::SPACE)
@@ -124,9 +135,9 @@ void GameAI::SendMoveMessage()
 
 bool GameAI::GetMove(Point& res)
 {
-	std::lock_guard<std::mutex> lg(this->mv_lock);
 	if (!ready_move)
 		return false;
+	std::lock_guard<std::mutex> lg(this->mv_lock);
 	res = ai_move;
 	ready_move = false;
 	return true;
