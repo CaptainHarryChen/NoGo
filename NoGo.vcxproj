@@ -116,6 +116,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>D:\no-go\glut\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -161,6 +162,7 @@
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="MenuBoard.h" />
     <ClInclude Include="Node.h" />
+    <ClInclude Include="safe_queue.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="img\button\blackstart1.bmp" />

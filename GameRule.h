@@ -5,7 +5,7 @@
 #define GAME_WHITE_WIN 3
 #define GAME_BLACK_WIN 4
 
-enum Color
+enum class Color
 {
 	SPACE, BLACK, WHITE
 };

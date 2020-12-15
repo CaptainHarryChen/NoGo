@@ -22,9 +22,9 @@ double Node::Evaluate(Color my)
 	double ret = 0;
 	for (int i = 0; i < 9; i++)
 		for (int j = 0; j < 9; j++)
-			if (A[i][j] == SPACE)
+			if (A[i][j] == Color::SPACE)
 			{
-				bool f1 = isLegal(i, j, my), f2 = isLegal(i, j, my == WHITE ? BLACK : WHITE);
+				bool f1 = isLegal(i, j, my), f2 = isLegal(i, j, my == Color::WHITE ? Color::BLACK : Color::WHITE);
 				if (f1 && !f2)
 					ret++;
 				if (!f1 && f2)

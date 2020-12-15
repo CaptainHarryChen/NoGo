@@ -8,8 +8,8 @@ CheckerBoard::CheckerBoard(Rect _pos)
 	img_black = img_white = 0;
 	pRuler = NULL;
 	pAI = NULL;
-	col_human = BLACK;
-	col_ai = WHITE;
+	col_human = Color::BLACK;
+	col_ai = Color::WHITE;
 	memset(board, 0, sizeof board);
 	mouse_pos = Point(-1, -1);
 
@@ -30,7 +30,7 @@ CheckerBoard::CheckerBoard(Rect _pos)
 void CheckerBoard::Init(Color c_human, GameRule* p, GameAI* pai)
 {
 	col_human = c_human;
-	col_ai = c_human == BLACK ? WHITE : BLACK;
+	col_ai = c_human == Color::BLACK ? Color::WHITE : Color::BLACK;
 	pRuler = p;
 	pAI = pai;
 	memset(board, 0, sizeof board);
@@ -67,9 +67,9 @@ void CheckerBoard::Draw()
 	for(int i=0;i<9;i++)
 		for (int j = 0; j < 9; j++)
 		{
-			if (board[i][j] == BLACK)
+			if (board[i][j] == Color::BLACK)
 				DrawCircleTexture(Point(j * w + w / 2, i * h + h / 2), (int)(0.46 * w), 0.46, img_black);
-			else if (board[i][j] == WHITE)
+			else if (board[i][j] == Color::WHITE)
 				DrawCircleTexture(Point(j * w + w / 2, i * h + h / 2), (int)(0.46 * w), 0.46, img_white);
 		}
 	if (mouse_legal)
