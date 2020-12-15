@@ -14,11 +14,10 @@
 class GameAI
 {
 	std::thread* pMain;
-	std::mutex msg_lock,mv_lock;
+	std::mutex mv_lock;
 
 	enum class Message { END, MOVE, CALC };
 
-	//std::queue<Message> qmsg;
 	threadsafe_queue <Message> qmsg;
 	Point player_move, ai_move;
 	Color color;

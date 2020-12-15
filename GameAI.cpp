@@ -59,7 +59,7 @@ void GameAI::Run()
 		for (;;)
 		{
 			Message message;
-			//message = this->qmsg.wait_and_pop();
+
 			if (!this->qmsg.try_pop(message))
 				break;
 
@@ -72,29 +72,23 @@ void GameAI::Run()
 			else if (message == Message::CALC)
 			{
 				start_time = clock();
-				//mv_lock.lock();
 				std::lock_guard<std::mutex> lg(this->mv_lock);
 				need_move = true;
 				ready_move = false;
-				//mv_lock.unlock();
 			}
 		}
-
-		mv_lock.lock();
+		std::unique_lock <std::mutex> lg(this->mv_lock);
 		//´¦ÀíÒÆ¶¯
 		if (need_move == true)
 		{
-			mv_lock.unlock();
+			lg.unlock();
 			Search(root);
 			ai_move = root->bestop;
 			root->setPiece(ai_move.x, ai_move.y, root->moveColor());
-			mv_lock.lock();
+			lg.lock();
 			need_move = false;
 			ready_move = true;
-			mv_lock.unlock();
 		}
-		else
-			mv_lock.unlock();
 	}
 }
 
@@ -119,42 +113,28 @@ void GameAI::Start()
 
 void GameAI::End()
 {
-	//msg_lock.lock();
-	std::lock_guard <std::mutex> lg(this->msg_lock);
 	qmsg.push(Message::END);
-	//msg_lock.unlock();
 	pMain->join();
 }
 
 void GameAI::SendMoveMessage()
 {
-	//msg_lock.lock();
-	std::lock_guard<std::mutex> lg(this->msg_lock);
 	qmsg.push(Message::CALC);
-	//msg_lock.unlock();
 }
 
 bool GameAI::GetMove(Point& res)
 {
-	//mv_lock.lock();
 	std::lock_guard<std::mutex> lg(this->mv_lock);
 	if (!ready_move)
-	{
-		//mv_lock.unlock();
 		return false;
-	}
 	res = ai_move;
 	ready_move = false;
-	//mv_lock.unlock();
 	return true;
 }
 
 void GameAI::PlayerMove(Point p)
 {
-	//msg_lock.lock();
-	std::lock_guard <std::mutex> lg(this->msg_lock);
 	qmsg.push(Message::MOVE);
 	player_move = p;
-	//msg_lock.unlock();
 }
 
