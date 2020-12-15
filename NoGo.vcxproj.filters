@@ -54,9 +54,6 @@
     <ClCompile Include="CheckerBoard.cpp">
       <Filter>源文件\Component</Filter>
     </ClCompile>
-    <ClCompile Include="GameAI.cpp">
-      <Filter>源文件\Game</Filter>
-    </ClCompile>
     <ClCompile Include="GameRule.cpp">
       <Filter>源文件\Game</Filter>
     </ClCompile>
@@ -69,13 +66,16 @@
     <ClCompile Include="Button.cpp">
       <Filter>源文件\Component</Filter>
     </ClCompile>
+    <ClCompile Include="GameAI_Minmax.cpp">
+      <Filter>源文件\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="GameAI.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphic.h">
       <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="GameAI.h">
-      <Filter>头文件\Game</Filter>
     </ClInclude>
     <ClInclude Include="GameRule.h">
       <Filter>头文件\Game</Filter>
@@ -97,6 +97,12 @@
     </ClInclude>
     <ClInclude Include="safe_queue.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GameAI_Minmax.h">
+      <Filter>头文件\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="GameAI.h">
+      <Filter>头文件\Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

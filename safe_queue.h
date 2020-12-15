@@ -26,8 +26,6 @@ private:
     queue_type data_queue;
     std::atomic <typename queue_type::size_type> safe_size;
 
-
-
 public:
     using value_type = typename queue_type::value_type;
     using container_type = typename queue_type::container_type;
@@ -72,8 +70,6 @@ public:
     * */
     void push(const value_type& new_value) {
         std::lock_guard<std::mutex>lk(mut);
-        //data_queue.push(std::move(new_value));
-        //safe_size++;
         push_unsafe(std::move(new_value));
         data_cond.notify_one();
     }
@@ -85,7 +81,6 @@ public:
         std::unique_lock<std::mutex>lk(mut);
         data_cond.wait(lk, [this] {return !this->data_queue.empty(); });
         auto value = std::move(data_queue.front());
-        //data_queue.pop();
         pop_unsafe();
         return value;
     }
@@ -95,9 +90,8 @@ public:
     bool try_pop(value_type& value) {
         if (this->safe_size == 0)
             return false;
-        std::lock_guard<std::mutex>lk(mut);
+        std::lock_guard <std::mutex> lk(mut);
         value = std::move(data_queue.front());
-        //data_queue.pop();
         pop_unsafe();
         return true;
     }
@@ -105,14 +99,12 @@ public:
     * 返回队列是否为空
     * */
     auto empty() const->decltype(data_queue.empty()) {
-        //std::lock_guard<std::mutex>lk(mut);
         return safe_size == 0;
     }
     /*
     * 返回队列中元素个数
     * */
     auto size() const->decltype(data_queue.size()) {
-        //std::lock_guard<std::mutex>lk(mut);
         return safe_size;
     }
 }; /* threadsafe_queue */
