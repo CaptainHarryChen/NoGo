@@ -146,6 +146,7 @@
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="CheckerBoard.cpp" />
     <ClCompile Include="GameAI.cpp" />
+    <ClCompile Include="GameAI_Minmax.cpp" />
     <ClCompile Include="Graphic.cpp" />
     <ClCompile Include="GameRule.cpp" />
     <ClCompile Include="GameScene.cpp" />
@@ -157,6 +158,7 @@
     <ClInclude Include="Button.h" />
     <ClInclude Include="CheckerBoard.h" />
     <ClInclude Include="GameAI.h" />
+    <ClInclude Include="GameAI_Minmax.h" />
     <ClInclude Include="Graphic.h" />
     <ClInclude Include="GameRule.h" />
     <ClInclude Include="GameScene.h" />
