@@ -1,5 +1,6 @@
 #pragma once
 #include <thread>
+#include <memory>
 #include <mutex>
 #include <ctime>
 #include <queue>
@@ -22,15 +23,16 @@ class GameAI
 	Point player_move, ai_move;
 	Color color;
 	clock_t start_time;
-	bool need_move, ready_move;
+	std::atomic_bool need_move, ready_move;
 
-	Node* root;
+	std::shared_ptr <Node> root;
 
 	void Search(Node* u, int step);
 	void Run();
 	
 public:
 	GameAI(Color col);
+	~GameAI();
 
 	void SetBeginningState();
 	void SetBeginningState(const Color A[9][9]);
