@@ -7,6 +7,8 @@
 #include "GameRule.h"
 #include "Node.h"
 
+#include "safe_queue.h"
+
 #define MAX_SEARCH_STEP 3
 
 class GameAI
@@ -14,9 +16,10 @@ class GameAI
 	std::thread* pMain;
 	std::mutex msg_lock,mv_lock;
 
-	enum Message { END, MOVE, CALC };
+	enum class Message { END, MOVE, CALC };
 
-	std::queue<Message> qmsg;
+	//std::queue<Message> qmsg;
+	threadsafe_queue <Message> qmsg;
 	Point player_move, ai_move;
 	Color color;
 	clock_t start_time;

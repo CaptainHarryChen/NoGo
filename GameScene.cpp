@@ -4,7 +4,7 @@
 void GameScene::StartGame(Color c)
 {
 	col_human = c;
-	col_ai = c == BLACK ? WHITE : BLACK;
+	col_ai = c == Color::BLACK ? Color::WHITE : Color::BLACK;
 	pRuler = new GameRule;
 	pAI = new GameAI(col_ai);
 	pCheckerBoard->Init(c, pRuler, pAI);
@@ -22,8 +22,8 @@ GameScene::GameScene(int width, int height) :scene_width(width), scene_height(he
 	pStartBlack = new Button(Rect(950, 425, 1150, 475), "img//button//blackstart1.bmp", "img//button//blackstart2.bmp", "img//button/blackstart3.bmp");
 
 	game_state = MAIN_MENU;
-	col_human = BLACK;
-	col_ai = WHITE;
+	col_human = Color::BLACK;
+	col_ai = Color::WHITE;
 }
 
 void GameScene::Init()
@@ -110,7 +110,7 @@ void GameScene::OnMouseClick(int button, int state, int x, int y)
 			else if (state == GLUT_UP)
 			{
 				if (pStartBlack->OnClick(Point(x, y), state))
-					StartGame(BLACK);
+					StartGame(Color::BLACK);
 			}
 		}
 	}

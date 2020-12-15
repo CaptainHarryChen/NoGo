@@ -6,10 +6,10 @@ GameAI::GameAI(Color col)
 {
 	color = col;
 	start_time = 0;
-	pMain = NULL;
+	pMain = nullptr;
 	need_move = false;
 	ready_move = false;
-	root = NULL;
+	root = nullptr;
 }
 
 void GameAI::Search(Node* u, int step = 0)
@@ -34,7 +34,7 @@ void GameAI::Search(Node* u, int step = 0)
 	u->step = 0;
 	for (int i = 0; i < 9; i++)
 		for (int j = 0; j < 9; j++)
-			if (tmp[i][j] != SPACE)
+			if (tmp[i][j] != Color::SPACE)
 				u->setPiece(i, j, tmp[i][j]);
 	Node v = *u;
 	v.step++;
@@ -47,7 +47,7 @@ void GameAI::Search(Node* u, int step = 0)
 				Search(&v, step + 1);
 				if ((flag && v.value > u->value) || (!flag && v.value < u->value))
 					u->value = v.value, u->bestop = Point(i, j);
-				v.A[i][j] = SPACE;
+				v.A[i][j] = Color::SPACE;
 			}
 }
 
@@ -58,30 +58,28 @@ void GameAI::Run()
 		//Process Message
 		for (;;)
 		{
-			msg_lock.lock();
-			if (qmsg.empty())
-			{
-				msg_lock.unlock();
+			Message message;
+			//message = this->qmsg.wait_and_pop();
+			if (!this->qmsg.try_pop(message))
 				break;
-			}
-			Message message = qmsg.front();
-			qmsg.pop();
-			msg_lock.unlock();
-			if (message == END)
+
+			if (message == Message::END)
 				break;
-			else if (message == MOVE)
+			else if (message == Message::MOVE)
 			{
 				root->setPiece(player_move.x, player_move.y, root->moveColor());
 			}
-			else if (message == CALC)
+			else if (message == Message::CALC)
 			{
 				start_time = clock();
-				mv_lock.lock();
+				//mv_lock.lock();
+				std::lock_guard<std::mutex> lg(this->mv_lock);
 				need_move = true;
 				ready_move = false;
-				mv_lock.unlock();
+				//mv_lock.unlock();
 			}
 		}
+
 		mv_lock.lock();
 		//¥¶¿Ì“∆∂Ø
 		if (need_move == true)
@@ -109,7 +107,7 @@ void GameAI::SetBeginningState(const Color A[9][9])
 	root = new Node();
 	for (int i = 0; i < 9; i++)
 		for (int j = 0; j < 9; j++)
-			if (A[i][j] != SPACE)
+			if (A[i][j] != Color::SPACE)
 				root->setPiece(i, j, A[i][j]);
 }
 
@@ -121,38 +119,42 @@ void GameAI::Start()
 
 void GameAI::End()
 {
-	msg_lock.lock();
-	qmsg.push(END);
-	msg_lock.unlock();
+	//msg_lock.lock();
+	std::lock_guard <std::mutex> lg(this->msg_lock);
+	qmsg.push(Message::END);
+	//msg_lock.unlock();
 	pMain->join();
 }
 
 void GameAI::SendMoveMessage()
 {
-	msg_lock.lock();
-	qmsg.push(CALC);
-	msg_lock.unlock();
+	//msg_lock.lock();
+	std::lock_guard<std::mutex> lg(this->msg_lock);
+	qmsg.push(Message::CALC);
+	//msg_lock.unlock();
 }
 
 bool GameAI::GetMove(Point& res)
 {
-	mv_lock.lock();
+	//mv_lock.lock();
+	std::lock_guard<std::mutex> lg(this->mv_lock);
 	if (!ready_move)
 	{
-		mv_lock.unlock();
+		//mv_lock.unlock();
 		return false;
 	}
 	res = ai_move;
 	ready_move = false;
-	mv_lock.unlock();
+	//mv_lock.unlock();
 	return true;
 }
 
 void GameAI::PlayerMove(Point p)
 {
-	msg_lock.lock();
-	qmsg.push(MOVE);
+	//msg_lock.lock();
+	std::lock_guard <std::mutex> lg(this->msg_lock);
+	qmsg.push(Message::MOVE);
 	player_move = p;
-	msg_lock.unlock();
+	//msg_lock.unlock();
 }
 

@@ -95,6 +95,9 @@
     <ClInclude Include="Button.h">
       <Filter>头文件\Component</Filter>
     </ClInclude>
+    <ClInclude Include="safe_queue.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="img\checkerboard\board0.bmp">
