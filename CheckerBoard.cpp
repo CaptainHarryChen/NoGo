@@ -6,8 +6,8 @@ CheckerBoard::CheckerBoard(Rect _pos)
 	pos = _pos;
 	memset(img_board, 0, sizeof img_board);
 	img_black = img_white = 0;
-	pRuler = NULL;
-	pAI = NULL;
+	pRuler = nullptr;
+	pAI = nullptr;
 	col_human = Color::BLACK;
 	col_ai = Color::WHITE;
 	memset(board, 0, sizeof board);
