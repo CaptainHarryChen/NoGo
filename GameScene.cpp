@@ -115,8 +115,8 @@ void GameScene::OnMouseClick(int button, int state, int x, int y)
 				if (pCheckerBoard->in(Point(x, y)))
 					pCheckerBoard->OnMouseClick(Point(x, y));
 
-				//if (pRuler->moveColor() == col_ai)
-				//	pAI->SendGameMessage();
+				if (pRuler->moveColor() == col_ai)
+					pAI->SendGameMessage();
 			
 				int tmp = pRuler->isOver();
 				if (tmp)

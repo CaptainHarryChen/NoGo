@@ -14,7 +14,7 @@ GameAI_Minmax::GameAI_Minmax(Color col) : GameAI(col)
 GameAI_Minmax::~GameAI_Minmax()
 {
 	this->End();
-	if(pMain != nullptr)
+	if (pMain != nullptr)
 		delete pMain;
 	if (root != nullptr)
 		delete root;
@@ -22,6 +22,7 @@ GameAI_Minmax::~GameAI_Minmax()
 
 void GameAI_Minmax::Search(Node* u, int step = 0)
 {
+	const int dd[8][2] = { {-1,-1},{-1,0},{-1,1},{0,1},{1,1},{1,0},{1,-1},{0,-1} };
 	if (step >= MAX_SEARCH_STEP)
 	{
 		u->value = u->Evaluate(color);
@@ -47,9 +48,17 @@ void GameAI_Minmax::Search(Node* u, int step = 0)
 	Node v = *u;
 	v.step++;
 	Color mv = u->moveColor();
-	for(int i=0;i<9;i++)
-		for(int j=0;j<9;j++)
-			if (u->isLegal(i, j, mv))
+	for (int i = 0; i < 9; i++)
+		for (int j = 0; j < 9; j++)
+		{
+			bool has_neighbor = false;
+			for (int d = 0; d < 8; d++)
+			{
+				int x = i + dd[d][0], y = j + dd[d][1];
+				if (x >= 0 && y >= 0 && x < 9 && y < 9 && u->A[x][y] != Color::SPACE)
+					has_neighbor = true;
+			}
+			if (has_neighbor && u->isLegal(i, j, mv))
 			{
 				v.A[i][j] = mv;
 				Search(&v, step + 1);
@@ -57,12 +66,26 @@ void GameAI_Minmax::Search(Node* u, int step = 0)
 					u->value = v.value, u->bestop = Point(i, j);
 				v.A[i][j] = Color::SPACE;
 			}
+		}
+	for (int i = 0; i < 9; i++)
+		for (int j = 0; j < 9; j++)
+		{
+			if (u->isLegal(i, j, mv))
+			{
+				v.A[i][j] = mv;
+				Search(&v, step + 1);
+				if ((flag && v.value > u->value) || (!flag && v.value < u->value))
+					u->value = v.value, u->bestop = Point(i, j);
+				v.A[i][j] = Color::SPACE;
+				break;
+			}
+		}
 }
 
 void GameAI_Minmax::Run()
 {
 	bool bQuit = false;
-	while(!bQuit)
+	while (!bQuit)
 	{
 		//Process Message
 		for (;;)
@@ -92,7 +115,7 @@ void GameAI_Minmax::Run()
 
 		if (bQuit)
 			break;
-		
+
 		//¥¶¿Ì“∆∂Ø
 		if (need_move)
 		{
