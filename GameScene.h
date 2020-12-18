@@ -26,6 +26,7 @@ class GameScene
 	void StartGame(Color c);
 public:
 	GameScene(int width, int height);
+	~GameScene();
 
 	void Init();
 	void Display();

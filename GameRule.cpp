@@ -23,14 +23,14 @@ Color GameRule::moveColor()
 
 bool GameRule::isLegal(int x, int y, Color col)
 {
-	int ff = col == BLACK ? 0 : 1;
+	int ff = col == Color::BLACK ? 0 : 1;
 	if (B[ff][x][y] != -1)
 		return B[ff][x][y];
 	//std::cerr << "Check move (" << x << "," << y << "," << col << ")" << std::endl;
 	B[ff][x][y] = 0;
 	if (step == 0 && x == 4 && y == 4)
 		return false;
-	if (A[x][y] != SPACE)
+	if (A[x][y] != Color::SPACE)
 		return false;
 
 	bool has_hp = false, dead = false;
@@ -39,7 +39,7 @@ bool GameRule::isLegal(int x, int y, Color col)
 		Point v(x + dir[d][0], y + dir[d][1]);
 		if (inBoard(v))
 		{
-			if (A[v.x][v.y] == SPACE)
+			if (A[v.x][v.y] == Color::SPACE)
 				has_hp = true;
 			else
 			{
@@ -52,7 +52,7 @@ bool GameRule::isLegal(int x, int y, Color col)
 	for (int d = 0; d < 4; d++)
 	{
 		Point v(x + dir[d][0], y + dir[d][1]);
-		if (inBoard(v) && A[v.x][v.y] != SPACE)
+		if (inBoard(v) && A[v.x][v.y] != Color::SPACE)
 		{
 			if (A[v.x][v.y] != col)
 			{
@@ -86,14 +86,14 @@ int GameRule::isOver()
 		for (int j = 0; j < 9; j++)
 		{
 			int t = 0;
-			if (isLegal(i, j, BLACK))
+			if (isLegal(i, j, Color::BLACK))
 				t |= 1, cnt1++;
-			if (isLegal(i, j, WHITE))
+			if (isLegal(i, j, Color::WHITE))
 				t |= 2, cnt2++;
 		}
-	if (moveColor() == BLACK && cnt1 == 0)
+	if (moveColor() == Color::BLACK && cnt1 == 0)
 		return GAME_WHITE_WIN;
-	if (moveColor() == WHITE && cnt2 == 0)
+	if (moveColor() == Color::WHITE && cnt2 == 0)
 		return GAME_BLACK_WIN;
 	return 0;
 }
@@ -110,7 +110,7 @@ void GameRule::setPiece(int x, int y, Color col)
 		Point v(x + dir[d][0], y + dir[d][1]);
 		if (inBoard(v))
 		{
-			if (A[v.x][v.y] != SPACE)
+			if (A[v.x][v.y] != Color::SPACE)
 			{
 				r1 = dsu.Root(u);
 				r2 = dsu.Root(v);
