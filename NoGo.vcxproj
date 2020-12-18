@@ -116,6 +116,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>D:\no-go\glut\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -145,6 +146,7 @@
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="CheckerBoard.cpp" />
     <ClCompile Include="GameAI.cpp" />
+    <ClCompile Include="GameAI_Minmax.cpp" />
     <ClCompile Include="Graphic.cpp" />
     <ClCompile Include="GameRule.cpp" />
     <ClCompile Include="GameScene.cpp" />
@@ -156,11 +158,13 @@
     <ClInclude Include="Button.h" />
     <ClInclude Include="CheckerBoard.h" />
     <ClInclude Include="GameAI.h" />
+    <ClInclude Include="GameAI_Minmax.h" />
     <ClInclude Include="Graphic.h" />
     <ClInclude Include="GameRule.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="MenuBoard.h" />
     <ClInclude Include="Node.h" />
+    <ClInclude Include="safe_queue.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="img\button\blackstart1.bmp" />
