@@ -53,4 +53,5 @@ public:
 	bool isLegal(int x, int y, Color col);
 	int isOver();
 	void setPiece(int x, int y, Color col);
+	void Restucture();
 };

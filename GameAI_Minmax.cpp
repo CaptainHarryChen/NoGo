@@ -23,6 +23,12 @@ GameAI_Minmax::~GameAI_Minmax()
 void GameAI_Minmax::Search(Node* u, int step = 0)
 {
 	const int dd[8][2] = { {-1,-1},{-1,0},{-1,1},{0,1},{1,1},{1,0},{1,-1},{0,-1} };
+	bool flag = (step + 1) % 2;
+	if (flag)
+		u->value = -1e100;
+	else
+		u->value = 1e100;
+	u->Restucture();
 	if (step >= MAX_SEARCH_STEP)
 	{
 		u->value = u->Evaluate(color);
@@ -30,21 +36,6 @@ void GameAI_Minmax::Search(Node* u, int step = 0)
 		//std::cerr << "Finish search:" << u->value << std::endl;
 		return;
 	}
-	bool flag = u->moveColor() == color;
-	if (flag)
-		u->value = -1e100;
-	else
-		u->value = 1e100;
-	memset(u->B, -1, sizeof u->B);
-	static Color tmp[9][9];
-	memcpy(tmp, u->A, sizeof tmp);
-	memset(u->A, 0, sizeof u->A);
-	u->dsu.Reset();
-	u->step = 0;
-	for (int i = 0; i < 9; i++)
-		for (int j = 0; j < 9; j++)
-			if (tmp[i][j] != Color::SPACE)
-				u->setPiece(i, j, tmp[i][j]);
 	Node v = *u;
 	v.step++;
 	Color mv = u->moveColor();
@@ -62,7 +53,7 @@ void GameAI_Minmax::Search(Node* u, int step = 0)
 			{
 				v.A[i][j] = mv;
 				Search(&v, step + 1);
-				if ((flag && v.value > u->value) || (!flag && v.value < u->value))
+				if ((flag && v.value >= u->value) || (!flag && v.value <= u->value))
 					u->value = v.value, u->bestop = Point(i, j);
 				v.A[i][j] = Color::SPACE;
 			}
@@ -74,7 +65,7 @@ void GameAI_Minmax::Search(Node* u, int step = 0)
 			{
 				v.A[i][j] = mv;
 				Search(&v, step + 1);
-				if ((flag && v.value > u->value) || (!flag && v.value < u->value))
+				if ((flag && v.value >= u->value) || (!flag && v.value <= u->value))
 					u->value = v.value, u->bestop = Point(i, j);
 				v.A[i][j] = Color::SPACE;
 				break;
