@@ -10,7 +10,7 @@
 #include "GameAI.h"
 #include "safe_queue.h"
 
-#define MAX_SEARCH_STEP 3
+#define MAX_SEARCH_STEP 4
 
 class GameAI_Minmax : public GameAI
 {
@@ -25,7 +25,7 @@ class GameAI_Minmax : public GameAI
 
 	Node * root;
 
-	void Search(Node* u, int step);
+	Point Search(Node* u, int step = 0, double alpha = -1e100, double beta = 1e100);
 	void Run();
 	
 public:
