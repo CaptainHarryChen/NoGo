@@ -20,57 +20,65 @@ GameAI_Minmax::~GameAI_Minmax()
 		delete root;
 }
 
-void GameAI_Minmax::Search(Node* u, int step = 0)
+Point GameAI_Minmax::Search(Node* u, int step, double alpha, double beta)
 {
 	const int dd[8][2] = { {-1,-1},{-1,0},{-1,1},{0,1},{1,1},{1,0},{1,-1},{0,-1} };
+
 	bool flag = (step + 1) % 2;
-	if (flag)
-		u->value = -1e100;
-	else
-		u->value = 1e100;
 	u->Restucture();
-	if (step >= MAX_SEARCH_STEP)
+	Point ret(0, 0);
+	if (step >= MAX_SEARCH_STEP || u->isOver())
 	{
 		u->value = u->Evaluate(color);
-		//u->debug();
-		//std::cerr << "Finish search:" << u->value << std::endl;
-		return;
+		return ret;
 	}
 	Node v = *u;
 	v.step++;
 	Color mv = u->moveColor();
 	for (int i = 0; i < 9; i++)
 		for (int j = 0; j < 9; j++)
-		{
-			bool has_neighbor = false;
-			for (int d = 0; d < 8; d++)
+			if (v.A[i][j] == Color::SPACE)
 			{
-				int x = i + dd[d][0], y = j + dd[d][1];
-				if (x >= 0 && y >= 0 && x < 9 && y < 9 && u->A[x][y] != Color::SPACE)
-					has_neighbor = true;
+				bool has_neighbor = false;
+				for (int d = 0; d < 8; d++)
+				{
+					int x = i + dd[d][0], y = j + dd[d][1];
+					if (x >= 0 && y >= 0 && x < 9 && y < 9 && u->A[x][y] != Color::SPACE)
+						has_neighbor = true;
+				}
+				if (has_neighbor && u->isLegal(i, j, mv))
+				{
+					v.A[i][j] = mv;
+					Search(&v, step + 1, alpha, beta);
+					if (!flag && v.value < beta)
+						beta = v.value, ret = Point(i, j);
+					if (flag && v.value > alpha)
+						alpha = v.value, ret = Point(i, j);
+					v.A[i][j] = Color::SPACE;
+					if (alpha >= beta)
+					{
+						u->value = flag ? alpha : beta;
+						return ret;
+					}
+				}
 			}
-			if (has_neighbor && u->isLegal(i, j, mv))
-			{
-				v.A[i][j] = mv;
-				Search(&v, step + 1);
-				if ((flag && v.value >= u->value) || (!flag && v.value <= u->value))
-					u->value = v.value, u->bestop = Point(i, j);
-				v.A[i][j] = Color::SPACE;
-			}
-		}
 	for (int i = 0; i < 9; i++)
 		for (int j = 0; j < 9; j++)
 		{
 			if (u->isLegal(i, j, mv))
 			{
 				v.A[i][j] = mv;
-				Search(&v, step + 1);
-				if ((flag && v.value >= u->value) || (!flag && v.value <= u->value))
-					u->value = v.value, u->bestop = Point(i, j);
+				Search(&v, step + 1, alpha, beta);
+				if (!flag && v.value < beta)
+					beta = v.value, ret = Point(i, j);
+				if (flag && v.value > alpha)
+					alpha = v.value, ret = Point(i, j);
 				v.A[i][j] = Color::SPACE;
-				break;
+				u->value = flag ? alpha : beta;
+				return ret;
 			}
 		}
+	return ret;
 }
 
 void GameAI_Minmax::Run()
@@ -110,8 +118,7 @@ void GameAI_Minmax::Run()
 		//´¦ÀíÒÆ¶¯
 		if (need_move)
 		{
-			Search(root);
-			ai_move = root->bestop;
+			ai_move = Search(root);
 			root->setPiece(ai_move.x, ai_move.y, root->moveColor());
 
 			std::lock_guard <std::mutex> lg(this->mv_lock);
