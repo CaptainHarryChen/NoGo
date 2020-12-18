@@ -130,3 +130,32 @@ void GameRule::setPiece(int x, int y, Color col)
 	memset(B, -1, sizeof B);
 	//std::cerr << "(" << x << "," << y << ")'s hp is " << dsu.hp[r1.x][r1.y] << std::endl;
 }
+
+void GameRule::Restucture()
+{
+	memset(B, -1, sizeof B);
+	dsu.Reset();
+	step = 0;
+	for (int i = 0; i < 9; i++)
+		for (int j = 0; j < 9; j++)
+			if (A[i][j] != Color::SPACE)
+			{
+				step++;
+				for (int d = 0; d < 4; d++)
+				{
+					int x = i + dir[d][0], y = j + dir[d][1];
+					if (inBoard(Point(x, y)))
+					{
+						if (A[x][y] == Color::SPACE)
+						{
+							Point v = dsu.Root(Point(i, j));
+							dsu.hp[v.x][v.y]++;
+						}
+						else if (A[x][y] == A[i][j])
+						{
+							dsu.Merge(Point(x, y), Point(i, j));
+						}
+					}
+				}
+			}
+}
