@@ -62,22 +62,26 @@ Point GameAI_Minmax::Search(Node* u, int step, double alpha, double beta)
 					}
 				}
 			}
-	for (int i = 0; i < 9; i++)
-		for (int j = 0; j < 9; j++)
+	//if ((flag && alpha == -1e100) || (!flag && beta == 1e100))
+	{
+		int i = rand() % 9;
+		int j = rand() % 9;
+		while (!u->isLegal(i, j, mv))
 		{
-			if (u->isLegal(i, j, mv))
-			{
-				v.A[i][j] = mv;
-				Search(&v, step + 1, alpha, beta);
-				if (!flag && v.value < beta)
-					beta = v.value, ret = Point(i, j);
-				if (flag && v.value > alpha)
-					alpha = v.value, ret = Point(i, j);
-				v.A[i][j] = Color::SPACE;
-				u->value = flag ? alpha : beta;
-				return ret;
-			}
+			i = rand() % 9;
+			j = rand() % 9;
 		}
+		v.A[i][j] = mv;
+		Search(&v, step + 1, alpha, beta);
+		if (!flag && v.value < beta)
+			beta = v.value, ret = Point(i, j);
+		if (flag && v.value > alpha)
+			alpha = v.value, ret = Point(i, j);
+		v.A[i][j] = Color::SPACE;
+		u->value = flag ? alpha : beta;
+		return ret;
+	}
+	u->value = flag ? alpha : beta;
 	return ret;
 }
 

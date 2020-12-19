@@ -28,7 +28,7 @@ double Node::Evaluate(Color my)
 				if (f1 && !f2)
 					ret++;
 				if (!f1 && f2)
-					ret--;
+					ret-=10;
 			}
 	return ret;
 }
