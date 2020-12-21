@@ -1,12 +1,21 @@
 #include "GameScene.h"
 #include <GL/glut.h>
 
+#include "GameAI_Minmax.h"
+
 void GameScene::StartGame(Color c)
 {
 	col_human = c;
-	col_ai = c == BLACK ? WHITE : BLACK;
+	col_ai = c == Color::BLACK ? Color::WHITE : Color::BLACK;
+
+	if (pRuler != nullptr)
+		delete pRuler;
 	pRuler = new GameRule;
-	pAI = new GameAI(col_ai);
+
+	if (pAI != nullptr)
+		delete pAI;
+	pAI = new GameAI_Minmax(col_ai);
+
 	pCheckerBoard->Init(c, pRuler, pAI);
 	pAI->SetBeginningState();
 	pAI->Start();
@@ -15,15 +24,28 @@ void GameScene::StartGame(Color c)
 
 GameScene::GameScene(int width, int height) :scene_width(width), scene_height(height)
 {
-	pAI = NULL;
-	pRuler = NULL;
+	pAI = nullptr;
+	pRuler = nullptr;
+
 	pCheckerBoard = new CheckerBoard(Rect(0, 0, 900, 900));
 	pMenuBoard = new MenuBoard(Rect(900, 0, 1200, 900));
 	pStartBlack = new Button(Rect(950, 425, 1150, 475), "img//button//blackstart1.bmp", "img//button//blackstart2.bmp", "img//button/blackstart3.bmp");
 
 	game_state = MAIN_MENU;
-	col_human = BLACK;
-	col_ai = WHITE;
+	col_human = Color::BLACK;
+	col_ai = Color::WHITE;
+}
+
+GameScene::~GameScene()
+{
+	if (this->pAI != nullptr)
+		delete this->pAI;
+	if (this->pRuler != nullptr)
+		delete this->pRuler;
+
+	delete this->pCheckerBoard;
+	delete this->pMenuBoard;
+	delete this->pStartBlack;
 }
 
 void GameScene::Init()
@@ -94,7 +116,7 @@ void GameScene::OnMouseClick(int button, int state, int x, int y)
 					pCheckerBoard->OnMouseClick(Point(x, y));
 
 				if (pRuler->moveColor() == col_ai)
-					pAI->SendMoveMessage();
+					pAI->SendGameMessage();
 			
 				int tmp = pRuler->isOver();
 				if (tmp)
@@ -110,7 +132,7 @@ void GameScene::OnMouseClick(int button, int state, int x, int y)
 			else if (state == GLUT_UP)
 			{
 				if (pStartBlack->OnClick(Point(x, y), state))
-					StartGame(BLACK);
+					StartGame(Color::BLACK);
 			}
 		}
 	}

@@ -1,41 +1,30 @@
 #pragma once
-#include <thread>
-#include <mutex>
-#include <ctime>
-#include <queue>
-#include "Graphic.h"
 #include "GameRule.h"
-#include "Node.h"
-
-#define MAX_SEARCH_STEP 5
 
 class GameAI
 {
-	std::thread* pMain;
-	std::mutex msg_lock,mv_lock;
-
-	enum Message { END, MOVE, CALC };
-
-	std::queue<Message> qmsg;
-	Point player_move, ai_move;
-	Color color;
-	clock_t start_time;
-	bool need_move, ready_move;
-	int search_step;
-
-	Node* root;
-
-	void Run();
-	
 public:
-	GameAI(Color col);
-
-	void SetBeginningState();
-	void SetBeginningState(const Color A[9][9]);
-	void Start();
-	void End();
-	void SendMoveMessage();
-	bool GetMove(Point &res);
-	void PlayerMove(Point p);
+	enum class Message { END, MOVE, CALC };
+protected:
+	Color color;
+public:
+	GameAI(Color color);
+	// 注意：若析构函数不为虚函数，则子类的析构函数不会被调用！！
+	virtual ~GameAI() = 0;
+	// 向AI发送消息
+	virtual void SendGameMessage(Message = Message::CALC) = 0;
+	// 设置起始状态
+	virtual void SetBeginningState() = 0;
+	virtual void SetBeginningState(const Color A[9][9]) = 0;
+	// 启动AI
+	virtual void Start() = 0;
+	// 停止AI
+	virtual void End() = 0;
+	// 获取AI的下一步移动（非阻塞）
+	virtual bool GetMove(Point& res) = 0;
+	// 获取AI的下一步移动（阻塞）
+	virtual void WaitNextMove(Point& res);
+	// 设置玩家的移动
+	virtual void PlayerMove(Point p) = 0;
 };
 
