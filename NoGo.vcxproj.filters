@@ -54,28 +54,28 @@
     <ClCompile Include="CheckerBoard.cpp">
       <Filter>源文件\Component</Filter>
     </ClCompile>
-    <ClCompile Include="GameAI.cpp">
-      <Filter>源文件\Game</Filter>
-    </ClCompile>
     <ClCompile Include="GameRule.cpp">
       <Filter>源文件\Game</Filter>
     </ClCompile>
     <ClCompile Include="MenuBoard.cpp">
       <Filter>源文件\Component</Filter>
     </ClCompile>
-    <ClCompile Include="Node.cpp">
-      <Filter>源文件\Game</Filter>
-    </ClCompile>
     <ClCompile Include="Button.cpp">
       <Filter>源文件\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="GameAI_Minmax.cpp">
+      <Filter>源文件\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="GameAI.cpp">
+      <Filter>源文件\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="MinMaxNode.cpp">
+      <Filter>源文件\Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphic.h">
       <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="GameAI.h">
-      <Filter>头文件\Game</Filter>
     </ClInclude>
     <ClInclude Include="GameRule.h">
       <Filter>头文件\Game</Filter>
@@ -89,11 +89,20 @@
     <ClInclude Include="MenuBoard.h">
       <Filter>头文件\Component</Filter>
     </ClInclude>
-    <ClInclude Include="Node.h">
-      <Filter>头文件\Game</Filter>
-    </ClInclude>
     <ClInclude Include="Button.h">
       <Filter>头文件\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="safe_queue.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GameAI_Minmax.h">
+      <Filter>头文件\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="GameAI.h">
+      <Filter>头文件\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="MinMaxNode.h">
+      <Filter>头文件\Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
