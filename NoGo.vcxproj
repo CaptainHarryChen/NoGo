@@ -152,7 +152,7 @@
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MenuBoard.cpp" />
-    <ClCompile Include="Node.cpp" />
+    <ClCompile Include="MinMaxNode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Button.h" />
@@ -163,7 +163,7 @@
     <ClInclude Include="GameRule.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="MenuBoard.h" />
-    <ClInclude Include="Node.h" />
+    <ClInclude Include="MinMaxNode.h" />
     <ClInclude Include="safe_queue.h" />
   </ItemGroup>
   <ItemGroup>

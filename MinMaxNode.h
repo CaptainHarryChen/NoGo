@@ -1,13 +1,13 @@
 #pragma once
 #include "GameRule.h"
 
-class Node :public GameRule
+class MinMaxNode :public GameRule
 {
 public:
 	double value;
 
-	Node();
-	Node(Node* fa, Point op);
+	MinMaxNode();
+	MinMaxNode(MinMaxNode* fa, Point op);
 
 	void debug();
 

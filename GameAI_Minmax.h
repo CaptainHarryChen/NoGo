@@ -6,7 +6,7 @@
 #include <queue>
 #include "Graphic.h"
 #include "GameRule.h"
-#include "Node.h"
+#include "MinMaxNode.h"
 #include "GameAI.h"
 #include "safe_queue.h"
 
@@ -23,9 +23,9 @@ class GameAI_Minmax : public GameAI
 	clock_t start_time;
 	std::atomic_bool need_move, ready_move;
 
-	Node * root;
+	MinMaxNode * root;
 
-	Point Search(Node* u, int step = 0, double alpha = -1e100, double beta = 1e100);
+	Point Search(MinMaxNode* u, int step = 0, double alpha = -1e100, double beta = 1e100);
 	void Run();
 	
 public:

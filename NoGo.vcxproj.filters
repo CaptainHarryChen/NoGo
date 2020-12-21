@@ -60,9 +60,6 @@
     <ClCompile Include="MenuBoard.cpp">
       <Filter>源文件\Component</Filter>
     </ClCompile>
-    <ClCompile Include="Node.cpp">
-      <Filter>源文件\Game</Filter>
-    </ClCompile>
     <ClCompile Include="Button.cpp">
       <Filter>源文件\Component</Filter>
     </ClCompile>
@@ -70,6 +67,9 @@
       <Filter>源文件\Game</Filter>
     </ClCompile>
     <ClCompile Include="GameAI.cpp">
+      <Filter>源文件\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="MinMaxNode.cpp">
       <Filter>源文件\Game</Filter>
     </ClCompile>
   </ItemGroup>
@@ -89,9 +89,6 @@
     <ClInclude Include="MenuBoard.h">
       <Filter>头文件\Component</Filter>
     </ClInclude>
-    <ClInclude Include="Node.h">
-      <Filter>头文件\Game</Filter>
-    </ClInclude>
     <ClInclude Include="Button.h">
       <Filter>头文件\Component</Filter>
     </ClInclude>
@@ -102,6 +99,9 @@
       <Filter>头文件\Game</Filter>
     </ClInclude>
     <ClInclude Include="GameAI.h">
+      <Filter>头文件\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="MinMaxNode.h">
       <Filter>头文件\Game</Filter>
     </ClInclude>
   </ItemGroup>
