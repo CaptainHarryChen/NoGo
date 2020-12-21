@@ -72,6 +72,9 @@
     <ClCompile Include="MinMaxNode.cpp">
       <Filter>源文件\Game</Filter>
     </ClCompile>
+    <ClCompile Include="GameAI_MCTS.cpp">
+      <Filter>源文件\Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphic.h">
@@ -102,6 +105,9 @@
       <Filter>头文件\Game</Filter>
     </ClInclude>
     <ClInclude Include="MinMaxNode.h">
+      <Filter>头文件\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="GameAI_MCTS.h">
       <Filter>头文件\Game</Filter>
     </ClInclude>
   </ItemGroup>

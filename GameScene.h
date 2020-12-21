@@ -16,6 +16,7 @@ class GameScene
 
 	int game_state;
 	Color col_human, col_ai;
+	bool msg_send;
 
 	GameRule* pRuler;
 	GameAI* pAI;
