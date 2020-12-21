@@ -1,14 +1,14 @@
-#include "Node.h"
+#include "MinMaxNode.h"
 #include <cmath>
 #include <cstring>
 #include <cstdlib>
 
-Node::Node()
+MinMaxNode::MinMaxNode()
 {
 	value = 0.0;
 }
 
-Node::Node(Node* fa, Point op)
+MinMaxNode::MinMaxNode(MinMaxNode* fa, Point op)
 {
 	value = 0.0;
 	memcpy(A, fa->A, sizeof A);
@@ -17,7 +17,7 @@ Node::Node(Node* fa, Point op)
 	setPiece(op.x, op.y, moveColor());
 }
 
-double Node::Evaluate(Color my)
+double MinMaxNode::Evaluate(Color my)
 {
 	double ret = 0;
 	for (int i = 0; i < 9; i++)
@@ -33,7 +33,7 @@ double Node::Evaluate(Color my)
 	return ret;
 }
 
-void Node::debug()
+void MinMaxNode::debug()
 {
 	std::cerr << "Debug:" << this << std::endl;
 	for (int i = 0; i < 9; i++)

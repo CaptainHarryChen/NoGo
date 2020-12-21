@@ -20,7 +20,7 @@ GameAI_Minmax::~GameAI_Minmax()
 		delete root;
 }
 
-Point GameAI_Minmax::Search(Node* u, int step, double alpha, double beta)
+Point GameAI_Minmax::Search(MinMaxNode* u, int step, double alpha, double beta)
 {
 	const int dd[8][2] = { {-1,-1},{-1,0},{-1,1},{0,1},{1,1},{1,0},{1,-1},{0,-1} };
 
@@ -32,7 +32,7 @@ Point GameAI_Minmax::Search(Node* u, int step, double alpha, double beta)
 		u->value = u->Evaluate(color);
 		return ret;
 	}
-	Node v = *u;
+	MinMaxNode v = *u;
 	v.step++;
 	Color mv = u->moveColor();
 	for (int i = 0; i < 9; i++)
@@ -138,13 +138,13 @@ void GameAI_Minmax::SetBeginningState()
 {
 	if (root != nullptr)
 		delete root;
-	root = new Node();
+	root = new MinMaxNode();
 }
 void GameAI_Minmax::SetBeginningState(const Color A[9][9])
 {
 	if (root != nullptr)
 		delete root;
-	root = new Node();
+	root = new MinMaxNode();
 	for (int i = 0; i < 9; i++)
 		for (int j = 0; j < 9; j++)
 			if (A[i][j] != Color::SPACE)
