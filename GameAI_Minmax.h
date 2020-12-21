@@ -19,7 +19,6 @@ class GameAI_Minmax : public GameAI
 
 	threadsafe_queue <Message> qmsg;
 	Point player_move, ai_move;
-	//Color color;
 	clock_t start_time;
 	std::atomic_bool need_move, ready_move;
 

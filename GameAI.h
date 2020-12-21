@@ -6,7 +6,7 @@ class GameAI
 public:
 	enum class Message { END, MOVE, CALC };
 protected:
-	Color color;
+	Color ai_color;
 public:
 	GameAI(Color color);
 	// 注意：若析构函数不为虚函数，则子类的析构函数不会被调用！！

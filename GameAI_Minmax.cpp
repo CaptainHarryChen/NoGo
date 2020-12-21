@@ -29,7 +29,7 @@ Point GameAI_Minmax::Search(MinMaxNode* u, int step, double alpha, double beta)
 	Point ret(0, 0);
 	if (step >= MAX_SEARCH_STEP || u->isOver())
 	{
-		u->value = u->Evaluate(color);
+		u->value = u->Evaluate(ai_color);
 		return ret;
 	}
 	MinMaxNode v = *u;

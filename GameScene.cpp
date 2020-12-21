@@ -1,7 +1,7 @@
 #include "GameScene.h"
 #include <GL/glut.h>
 
-#include "GameAI_Minmax.h"
+#include "GameAI_MCTS.h"
 
 void GameScene::StartGame(Color c)
 {
@@ -14,7 +14,7 @@ void GameScene::StartGame(Color c)
 
 	if (pAI != nullptr)
 		delete pAI;
-	pAI = new GameAI_Minmax(col_ai);
+	pAI = new GameAI_MCTS(col_ai);
 
 	pCheckerBoard->Init(c, pRuler, pAI);
 	pAI->SetBeginningState();
@@ -34,6 +34,8 @@ GameScene::GameScene(int width, int height) :scene_width(width), scene_height(he
 	game_state = MAIN_MENU;
 	col_human = Color::BLACK;
 	col_ai = Color::WHITE;
+
+	msg_send = false;
 }
 
 GameScene::~GameScene()
@@ -83,6 +85,7 @@ void GameScene::Idle()
 				int tmp = pRuler->isOver();
 				if (tmp)
 					game_state = tmp;
+				msg_send = false;
 			}
 		}
 	}
@@ -114,13 +117,15 @@ void GameScene::OnMouseClick(int button, int state, int x, int y)
 			{
 				if (pCheckerBoard->in(Point(x, y)))
 					pCheckerBoard->OnMouseClick(Point(x, y));
-
-				if (pRuler->moveColor() == col_ai)
-					pAI->SendGameMessage();
 			
 				int tmp = pRuler->isOver();
 				if (tmp)
 					game_state = tmp;
+				else if (!msg_send && pRuler->moveColor() == col_ai)
+				{
+					pAI->SendGameMessage();
+					msg_send = true;
+				}
 			}
 	}
 	else

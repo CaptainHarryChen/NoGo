@@ -3,7 +3,7 @@
 
 GameAI::GameAI(Color color)
 {
-	this->color = color;
+	this->ai_color = color;
 
 }
 

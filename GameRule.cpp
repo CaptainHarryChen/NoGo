@@ -2,6 +2,7 @@
 #include <cstring>
 
 #include <iostream>
+#include <cassert>
 
 bool GameRule::inBoard(Point u)
 {
@@ -100,6 +101,7 @@ int GameRule::isOver()
 
 void GameRule::setPiece(int x, int y, Color col)
 {
+	assert(isLegal(x, y, col));
 	step++;
 	A[x][y] = col;
 	dsu.hp[x][y] = 0;
