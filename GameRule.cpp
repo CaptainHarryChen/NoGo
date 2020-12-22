@@ -66,10 +66,17 @@ bool GameRule::isLegal(int x, int y, Color col)
 				v = dsu.Root(v);
 				sum += dsu.hp[v.x][v.y];
 			}
+		}
+	}
+	for (int d = 0; d < 4; d++)
+	{
+		Point v(x + dir[d][0], y + dir[d][1]);
+		if (inBoard(v) && A[v.x][v.y] != Color::SPACE)
+		{
+			v = dsu.Root(v);
 			dsu.hp[v.x][v.y]++;
 		}
 	}
-
 	if (dead)
 		return false;
 	if (!has_hp && sum <= 0)
@@ -160,4 +167,18 @@ void GameRule::Restucture()
 					}
 				}
 			}
+}
+
+int GameRule::Evaluate(Color col)
+{
+	int ret = 0;
+	for (int i = 0; i < 9; i++)
+		for (int j = 0; j < 9; j++)
+		{
+			if (isLegal(i, j, col))
+				ret++;
+			if (isLegal(i, j, col == Color::BLACK ? Color::WHITE : Color::BLACK))
+				ret--;
+		}
+	return ret;
 }

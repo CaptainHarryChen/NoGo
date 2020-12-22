@@ -4,21 +4,22 @@
 #include <mutex>
 #include <ctime>
 #include <queue>
+#include <vector>
 #include "safe_queue.h"
 #include "GameAI.h"
 #include "Graphic.h"
 
-const double Confidence = 2.0;
-const int LeastVisitTime = 5;
-const int RolloutStep = 10;
+const double Confidence = 1.0;
+const int LeastVisitTime = 10;
+const int RolloutStep = 5;
 
 struct MCTS_Node;
-
+/*
 struct cmp
 {
 	Point op;
 	double ucb;
-	
+
 	cmp() { ucb = 0; }
 	cmp(Point a, double b) :op(a), ucb(b) {}
 
@@ -27,12 +28,13 @@ struct cmp
 		return ucb < t.ucb;
 	}
 };
-
+*/
 struct MCTS_Node
 {
 	double value;
 	int n;
-	std::priority_queue<cmp> que;
+	//std::priority_queue<cmp> que;
+	std::vector<Point> que;
 	MCTS_Node* son[9][9];
 
 	MCTS_Node()
@@ -50,11 +52,31 @@ struct MCTS_Node
 					delete son[i][j];
 	}
 
-	double UCB()const
+	double UCB(int N)const
 	{
 		if (n == 0)
 			return 1e100;
-		return value / n + Confidence * sqrt(log(n) / n);
+		return value / n + Confidence * sqrt(log(N) / n);
+	}
+
+	Point FindMaxUCB()
+	{
+		Point ret(-1, -1);
+		double mx = -2e100;
+		for (auto u : que)
+			if (son[u.x][u.y]->UCB(n) > mx)
+				mx = son[u.x][u.y]->UCB(n), ret = u;
+		return ret;
+	}
+
+	Point FindMaxRating()
+	{
+		Point ret(-1, -1);
+		double mx = -2e100;
+		for (auto u : que)
+			if (son[u.x][u.y]->value / son[u.x][u.y]->n > mx)
+				mx = son[u.x][u.y]->value / son[u.x][u.y]->n, ret = u;
+		return ret;
 	}
 };
 
@@ -69,6 +91,7 @@ class GameAI_MCTS :
 	clock_t start_time;
 	std::atomic_bool need_move, ready_move;
 
+	int beginning_value;
 	GameRule* board, * tboard;
 	MCTS_Node* root;
 
