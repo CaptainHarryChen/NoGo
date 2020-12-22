@@ -54,4 +54,5 @@ public:
 	int isOver();
 	void setPiece(int x, int y, Color col);
 	void Restucture();
+	int Evaluate(Color col);
 };

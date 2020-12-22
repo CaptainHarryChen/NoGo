@@ -67,21 +67,18 @@ double GameAI_MCTS::Rollout()
 			cnt[c]--;
 		}
 	}
-	c = tmp.moveColor() == Color::WHITE;
-	if (cnt[c] == 0)
-		return ai_color == tmp.moveColor() ? -1e100 : 1e100;
-	if (cnt[c ^ 1] == 0)
-		return ai_color == tmp.moveColor() ? 1e100 : -1e100;
-	int ret = 0;
-	for (int i = 0; i < 9; i++)
-		for (int j = 0; j < 9; j++)
-		{
-			if (tmp.isLegal(i, j, ai_color))
-				ret++;
-			if (tmp.isLegal(i, j, ai_color == Color::BLACK ? Color::WHITE : Color::BLACK))
-				ret--;
-		}
-	return ret;
+	else
+	{
+		c = tmp.moveColor() == Color::WHITE;
+		if (cnt[c] == 0)
+			return ai_color == tmp.moveColor() ? -1e100 : 1e100;
+		if (cnt[c ^ 1] == 0)
+			return ai_color == tmp.moveColor() ? 1e100 : -1e100;
+	}
+	int ret = tmp.Evaluate(ai_color) - beginning_value;
+	if (ret < 0)
+		return -ret * ret;
+	return ret * ret;
 }
 
 double GameAI_MCTS::Search(MCTS_Node* cur)
@@ -92,9 +89,9 @@ double GameAI_MCTS::Search(MCTS_Node* cur)
 		{
 			double up = Rollout();
 			cur->n++;
-			if (tboard->moveColor() != ai_color)
+			if (up < 0 && tboard->moveColor() == ai_color) //说明父亲结点是对方下棋
 				cur->value -= up;
-			else
+			else if (up > 0 && tboard->moveColor() != ai_color) //说明父亲节点是ai自己下棋
 				cur->value += up;
 			return up;
 		}
@@ -105,22 +102,19 @@ double GameAI_MCTS::Search(MCTS_Node* cur)
 					if (tboard->isLegal(i, j, tboard->moveColor()))
 					{
 						cur->son[i][j] = new MCTS_Node();
-						cur->que.push(cmp(Point(i, j), 1e100));
+						cur->que.push_back(Point(i, j));
 					}
 			if (cur->que.empty())
 				return tboard->moveColor() == ai_color ? -1e100 : 1e100;
 		}
 	}
-	cmp t = cur->que.top();
-	cur->que.pop();
-	tboard->setPiece(t.op.x, t.op.y, tboard->moveColor());
-	double up = Search(cur->son[t.op.x][t.op.y]);
-	t.ucb = cur->son[t.op.x][t.op.y]->UCB();
-	cur->que.push(t);
+	Point t = cur->FindMaxUCB();
+	tboard->setPiece(t.x, t.y, tboard->moveColor());
+	double up = Search(cur->son[t.x][t.y]);
 	cur->n++;
-	if (tboard->moveColor() != ai_color)
+	if (up < 0 && tboard->moveColor() == ai_color) //说明父亲节点是对方下棋
 		cur->value -= up;
-	else
+	else if (up > 0 && tboard->moveColor() != ai_color) //说明父亲节点是ai自己下棋
 		cur->value += up;
 	return up;
 }
@@ -146,6 +140,8 @@ void GameAI_MCTS::Run()
 			else if (message == Message::MOVE)
 			{
 				Move(player_move);
+				delete root;
+				root = new MCTS_Node();
 			}
 			else if (message == Message::CALC)
 			{
@@ -162,12 +158,24 @@ void GameAI_MCTS::Run()
 		//处理移动
 		if (need_move)
 		{
-			while (clock() - start_time <= 950)
+			int search_times = 0;
+			beginning_value = tboard->Evaluate(ai_color);
+			while /*(search_times<=1600)*/(clock() - start_time <= 950)
 			{
 				memcpy(tboard, board, sizeof(GameRule));
 				Search(root);
+				search_times++;
 			}
-			ai_move = root->que.top().op;
+			std::cerr << "Search times:" << search_times << std::endl;
+			for (int i = 0; i < 9; i++)
+				for (int j = 0; j < 9; j++)
+					if (root->son[i][j])
+						std::cerr << "Operation(" << i << "," << j << ")'s ucb is " << root->son[i][j]->UCB(root->n)
+						<< "    value is " << root->son[i][j]->value
+						<< "    n is " << root->son[i][j]->n
+						<< "    The rating is " << root->son[i][j]->value / root->son[i][j]->n
+						<< std::endl;
+			ai_move = root->FindMaxRating();
 			Move(ai_move);
 
 			std::lock_guard <std::mutex> lg(this->mv_lock);
