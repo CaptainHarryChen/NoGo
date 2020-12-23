@@ -9,9 +9,9 @@
 #include "GameAI.h"
 #include "Graphic.h"
 
-const double Confidence = 1.0;
+const double Confidence = 1.414;
 const int LeastVisitTime = 10;
-const int RolloutStep = 5;
+const int RolloutStep = 10;
 
 struct MCTS_Node;
 /*
