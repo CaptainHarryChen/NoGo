@@ -75,10 +75,7 @@ double GameAI_MCTS::Rollout()
 		if (cnt[c ^ 1] == 0)
 			return ai_color == tmp.moveColor() ? 1e100 : -1e100;
 	}
-	int ret = tmp.Evaluate(ai_color) - beginning_value;
-	//if (ret < 0)
-	//	return -ret * ret;
-	//return ret * ret;
+	int ret = tmp.Evaluate(ai_color);//- beginning_value;
 	return ret;
 }
 
@@ -89,11 +86,12 @@ double GameAI_MCTS::Search(MCTS_Node* cur)
 		if (cur->n < LeastVisitTime)
 		{
 			double up = Rollout();
+			if (tboard->moveColor() == ai_color)
+				up = -up;
 			cur->n++;
-			if (up < 0 && tboard->moveColor() == ai_color) //说明父亲结点是对方下棋
-				cur->value -= up;
-			else if (up > 0 && tboard->moveColor() != ai_color) //说明父亲节点是ai自己下棋
+			if (up > 0)
 				cur->value += up;
+			
 			return up;
 		}
 		else
@@ -111,12 +109,13 @@ double GameAI_MCTS::Search(MCTS_Node* cur)
 	}
 	Point t = cur->FindMaxUCB();
 	tboard->setPiece(t.x, t.y, tboard->moveColor());
-	double up = Search(cur->son[t.x][t.y]);
+	double up = -Search(cur->son[t.x][t.y]);
 	cur->n++;
-	if (up < 0 && tboard->moveColor() == ai_color) //说明父亲节点是对方下棋
-		cur->value -= up;
-	else if (up > 0 && tboard->moveColor() != ai_color) //说明父亲节点是ai自己下棋
+	
+	if (up > 0)
 		cur->value += up;
+		
+	//cur->value += up;
 	return up;
 }
 
@@ -161,7 +160,7 @@ void GameAI_MCTS::Run()
 		{
 			int search_times = 0;
 			beginning_value = tboard->Evaluate(ai_color);
-			while /*(search_times<=1600)*/(clock() - start_time <= 50)
+			while /*(search_times<=1000)*/(clock() - start_time <= 950)
 			{
 				memcpy(tboard, board, sizeof(GameRule));
 				Search(root);
