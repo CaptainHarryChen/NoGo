@@ -1,5 +1,6 @@
 #include "GameScene.h"
 #include <GL/glut.h>
+#include "Graphic.h"
 
 #include "GameAI_MCTS.h"
 
@@ -20,6 +21,15 @@ void GameScene::StartGame(Color c)
 	pAI->SetBeginningState();
 	pAI->Start();
 	game_state = IN_GAME;
+	pMenuBoard->SetGameState(game_state);
+
+	msg_send = false;
+
+	if (!msg_send && pRuler->moveColor() == col_ai)
+	{
+		pAI->SendGameMessage();
+		msg_send = true;
+	}
 }
 
 GameScene::GameScene(int width, int height) :scene_width(width), scene_height(height)
@@ -30,8 +40,10 @@ GameScene::GameScene(int width, int height) :scene_width(width), scene_height(he
 	pCheckerBoard = new CheckerBoard(Rect(0, 0, 900, 900));
 	pMenuBoard = new MenuBoard(Rect(900, 0, 1200, 900));
 	pStartBlack = new Button(Rect(950, 425, 1150, 475), "img//button//blackstart1.bmp", "img//button//blackstart2.bmp", "img//button/blackstart3.bmp");
+	pStartWhite = new Button(Rect(950, 500, 1150, 550), "img//button//whitestart1.bmp", "img//button//whitestart2.bmp", "img//button/whitestart3.bmp");
 
 	game_state = MAIN_MENU;
+	pMenuBoard->SetGameState(game_state);
 	col_human = Color::BLACK;
 	col_ai = Color::WHITE;
 
@@ -48,6 +60,7 @@ GameScene::~GameScene()
 	delete this->pCheckerBoard;
 	delete this->pMenuBoard;
 	delete this->pStartBlack;
+	delete this->pStartWhite;
 }
 
 void GameScene::Init()
@@ -55,7 +68,7 @@ void GameScene::Init()
 	//pCheckerBoard->Init();
 	pMenuBoard->Init();
 
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void GameScene::Display()
@@ -67,6 +80,7 @@ void GameScene::Display()
 	pCheckerBoard->Draw();
 	pMenuBoard->Draw();
 	pStartBlack->Draw();
+	pStartWhite->Draw();
 
 	glutSwapBuffers();
 }
@@ -84,7 +98,10 @@ void GameScene::Idle()
 				pCheckerBoard->setPiece(a.x, a.y, col_ai);
 				int tmp = pRuler->isOver();
 				if (tmp)
+				{
 					game_state = tmp;
+					pMenuBoard->SetGameState(game_state);
+				}
 				msg_send = false;
 			}
 		}
@@ -104,23 +121,28 @@ void GameScene::OnMouseMove(int x, int y)
 	else
 	{
 		pCheckerBoard->SetMousePos(Point(-1, -1));
-		pStartBlack->OnMouse(Point(x, y));
 	}
+	pStartBlack->OnMouse(Point(x, y));
+	pStartWhite->OnMouse(Point(x, y));
 }
 
 void GameScene::OnMouseClick(int button, int state, int x, int y)
 {
-	if(game_state==IN_GAME)
+	std::cerr << "Mouse click at pos (" << x << "," << y << ")" << std::endl;
+	if (game_state == IN_GAME)
 	{
 		if (button == GLUT_LEFT_BUTTON)
-			if(state == GLUT_UP)
+			if (state == GLUT_UP)
 			{
 				if (pCheckerBoard->in(Point(x, y)))
 					pCheckerBoard->OnMouseClick(Point(x, y));
-			
+
 				int tmp = pRuler->isOver();
 				if (tmp)
+				{
 					game_state = tmp;
+					pMenuBoard->SetGameState(game_state);
+				}
 				else if (!msg_send && pRuler->moveColor() == col_ai)
 				{
 					pAI->SendGameMessage();
@@ -128,16 +150,21 @@ void GameScene::OnMouseClick(int button, int state, int x, int y)
 				}
 			}
 	}
-	else
+	//else
 	{
 		if (button == GLUT_LEFT_BUTTON)
 		{
 			if (state == GLUT_DOWN)
+			{
 				pStartBlack->OnClick(Point(x, y), state);
+				pStartWhite->OnClick(Point(x, y), state);
+			}
 			else if (state == GLUT_UP)
 			{
 				if (pStartBlack->OnClick(Point(x, y), state))
 					StartGame(Color::BLACK);
+				if (pStartWhite->OnClick(Point(x, y), state))
+					StartGame(Color::WHITE);
 			}
 		}
 	}

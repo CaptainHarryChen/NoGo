@@ -4,11 +4,7 @@
 #include "Button.h"
 #include "GameRule.h"
 #include "GameAI.h"
-
-#define MAIN_MENU 1
-#define IN_GAME 2
-#define GAME_WHITE_WIN 3
-#define GAME_BLACK_WIN 4
+#include "Graphic.h"
 
 class GameScene
 {
@@ -22,7 +18,7 @@ class GameScene
 	GameAI* pAI;
 	CheckerBoard* pCheckerBoard;
 	MenuBoard* pMenuBoard;
-	Button* pStartBlack;
+	Button* pStartBlack, * pStartWhite;
 
 	void StartGame(Color c);
 public:

@@ -161,7 +161,7 @@ void GameAI_MCTS::Run()
 		{
 			int search_times = 0;
 			beginning_value = tboard->Evaluate(ai_color);
-			while /*(search_times<=1600)*/(clock() - start_time <= 950)
+			while /*(search_times<=1600)*/(clock() - start_time <= 50)
 			{
 				memcpy(tboard, board, sizeof(GameRule));
 				Search(root);
