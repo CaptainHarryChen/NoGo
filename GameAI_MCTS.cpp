@@ -76,9 +76,10 @@ double GameAI_MCTS::Rollout()
 			return ai_color == tmp.moveColor() ? 1e100 : -1e100;
 	}
 	int ret = tmp.Evaluate(ai_color) - beginning_value;
-	if (ret < 0)
-		return -ret * ret;
-	return ret * ret;
+	//if (ret < 0)
+	//	return -ret * ret;
+	//return ret * ret;
+	return ret;
 }
 
 double GameAI_MCTS::Search(MCTS_Node* cur)
