@@ -163,5 +163,14 @@
     <Image Include="img\button\blackstart1.bmp">
       <Filter>资源文件\button</Filter>
     </Image>
+    <Image Include="img\button\whitestart1.bmp">
+      <Filter>资源文件\button</Filter>
+    </Image>
+    <Image Include="img\button\whitestart2.bmp">
+      <Filter>资源文件\button</Filter>
+    </Image>
+    <Image Include="img\button\whitestart3.bmp">
+      <Filter>资源文件\button</Filter>
+    </Image>
   </ItemGroup>
 </Project>

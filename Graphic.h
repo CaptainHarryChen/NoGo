@@ -3,6 +3,11 @@
 #include <cmath>
 #include <iostream>
 
+#define MAIN_MENU 1
+#define IN_GAME 2
+#define GAME_WHITE_WIN 3
+#define GAME_BLACK_WIN 4
+
 const int CircleSegment = 50;
 
 struct Point
@@ -13,6 +18,10 @@ struct Point
 	bool operator == (const Point& t)const
 	{
 		return x == t.x && y == t.y;
+	}
+	Point operator + (const Point& t)const
+	{
+		return Point(x + t.x, y + t.y);
 	}
 };
 
@@ -33,3 +42,5 @@ GLint LoadTexture(const char* file_name);
 void DrawTexture(Rect pos, GLint texture);
 void DrawCircleTexture(Point pos, double radius, double text_radius, GLint texture);
 void DrawTransCircle(Point pos, double radius, double R, double G, double B, double A);
+void DrawString(const char* str, const char* font, int size, int x, int y, double R, double G, double B);
+void SelectFont(int size, int charset, const char* face);

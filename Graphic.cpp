@@ -127,7 +127,7 @@ void DrawCircleTexture(Point pos, double radius, double text_radius, GLint textu
 	glDisable(GL_TEXTURE_2D);
 }
 
-void DrawTransCircle(Point pos, double radius, double R,double G,double B,double A)
+void DrawTransCircle(Point pos, double radius, double R, double G, double B, double A)
 {
 	const double M_PI = acos(-1);
 	glEnable(GL_BLEND);
@@ -139,4 +139,52 @@ void DrawTransCircle(Point pos, double radius, double R,double G,double B,double
 	}
 	glEnd();
 	glDisable(GL_BLEND);
+}
+
+void DrawString(const char* str, const char* font, int size, int x, int y, double R, double G, double B)
+{
+	SelectFont(size, GB2312_CHARSET, font);
+	glColor3d(R, G, B);
+	glRasterPos2d(x, y);
+
+	int len, i;
+	wchar_t* wstring;
+	HDC hDC = wglGetCurrentDC();
+	GLuint  list = glGenLists(1);
+
+	// 计算字符的个数
+	// 如果是双字节字符的（比如中文字符），两个字节才算一个字符
+	// 否则一个字节算一个字符
+	len = 0;
+	for (i = 0; str[i] != '\0'; ++i)
+	{
+		if (IsDBCSLeadByte(str[i]))
+			++i;
+		++len;
+	}
+
+	// 将混合字符转化为宽字符
+	wstring = (wchar_t*)malloc((len + 1) * sizeof(wchar_t));
+	MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, str, -1, wstring, len);
+	wstring[len] = L'\0';
+
+	// 逐个输出字符
+	for (i = 0; i < len; ++i)
+	{
+		wglUseFontBitmapsW(hDC, wstring[i], 1, list);
+		glCallList(list);
+	}
+
+	// 回收所有临时资源
+	free(wstring);
+	glDeleteLists(list, 1);
+}
+
+void SelectFont(int size, int charset, const char* face)
+{
+	HFONT hFont = CreateFontA(size, 0, 0, 0, FW_BOLD, 0, 0, 0,
+		charset, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
+		DEFAULT_QUALITY, DEFAULT_PITCH | FF_SWISS, face);
+	HFONT hOldFont = (HFONT)SelectObject(wglGetCurrentDC(), hFont);
+	DeleteObject(hOldFont);
 }
