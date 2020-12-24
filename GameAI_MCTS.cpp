@@ -75,7 +75,7 @@ double GameAI_MCTS::Rollout()
 		if (cnt[c ^ 1] == 0)
 			return ai_color == tmp.moveColor() ? 1e100 : -1e100;
 	}
-	int ret = tmp.Evaluate(ai_color);//- beginning_value;
+	int ret = tmp.Evaluate(ai_color) - beginning_value;
 	return ret;
 }
 
