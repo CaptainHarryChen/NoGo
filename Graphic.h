@@ -8,6 +8,7 @@
 #define IN_GAME 2
 #define GAME_WHITE_WIN 3
 #define GAME_BLACK_WIN 4
+#define PAUSE 5
 
 const int CircleSegment = 50;
 

@@ -155,6 +155,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MenuBoard.cpp" />
     <ClCompile Include="MinMaxNode.cpp" />
+    <ClCompile Include="SaveManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Button.h" />
@@ -168,17 +169,12 @@
     <ClInclude Include="MenuBoard.h" />
     <ClInclude Include="MinMaxNode.h" />
     <ClInclude Include="safe_queue.h" />
+    <ClInclude Include="SaveManager.h" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="img\button\blackstart1.bmp" />
-    <Image Include="img\button\blackstart2.bmp" />
-    <Image Include="img\button\blackstart3.bmp" />
     <Image Include="img\button\button1.bmp" />
     <Image Include="img\button\button2.bmp" />
     <Image Include="img\button\button3.bmp" />
-    <Image Include="img\button\whitestart1.bmp" />
-    <Image Include="img\button\whitestart2.bmp" />
-    <Image Include="img\button\whitestart3.bmp" />
     <Image Include="img\checkerboard\board0.bmp" />
     <Image Include="img\checkerboard\board1.bmp" />
     <Image Include="img\checkerboard\board2.bmp" />
