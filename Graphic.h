@@ -2,6 +2,7 @@
 #include <GL/glut.h>
 #include <cmath>
 #include <iostream>
+#include <string>
 
 #define MAIN_MENU 1
 #define IN_GAME 2
@@ -38,9 +39,19 @@ struct Rect
 	}
 };
 
+struct Text
+{
+	std::string str, font;
+	int size;
+	double R, G, B;
+	Text(std::string _str, std::string _font, int _size, double _R = 0, double _G = 0, double _B = 0)
+		:str(_str), font(_font), size(_size), R(_R), G(_G), B(_B) {}
+};
+
 GLint LoadTexture(const char* file_name);
 void DrawTexture(Rect pos, GLint texture);
 void DrawCircleTexture(Point pos, double radius, double text_radius, GLint texture);
 void DrawTransCircle(Point pos, double radius, double R, double G, double B, double A);
 void DrawString(const char* str, const char* font, int size, int x, int y, double R, double G, double B);
+void DrawString(const Text& text, Point pos);
 void SelectFont(int size, int charset, const char* face);

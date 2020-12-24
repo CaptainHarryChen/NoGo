@@ -22,6 +22,8 @@ void GameScene::StartGame(Color c)
 	pAI->Start();
 	game_state = IN_GAME;
 	pMenuBoard->SetGameState(game_state);
+	pStartBlack->SetText(Text("重新开始：黑棋", "楷体", 22));
+	pStartWhite->SetText(Text("重新开始：白棋", "楷体", 22));
 
 	msg_send = false;
 
@@ -39,8 +41,8 @@ GameScene::GameScene(int width, int height) :scene_width(width), scene_height(he
 
 	pCheckerBoard = new CheckerBoard(Rect(0, 0, 900, 900));
 	pMenuBoard = new MenuBoard(Rect(900, 0, 1200, 900));
-	pStartBlack = new Button(Rect(950, 425, 1150, 475), "img//button//blackstart1.bmp", "img//button//blackstart2.bmp", "img//button/blackstart3.bmp");
-	pStartWhite = new Button(Rect(950, 500, 1150, 550), "img//button//whitestart1.bmp", "img//button//whitestart2.bmp", "img//button/whitestart3.bmp");
+	pStartBlack = new Button(Rect(950, 425, 1150, 475), Text("开始游戏：黑棋", "楷体", 22));
+	pStartWhite = new Button(Rect(950, 500, 1150, 550), Text("开始游戏：白棋", "楷体", 22));
 
 	game_state = MAIN_MENU;
 	pMenuBoard->SetGameState(game_state);

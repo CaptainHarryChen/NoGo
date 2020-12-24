@@ -1,18 +1,25 @@
 #include "Button.h"
 //#include <iostream>
 
-Button::Button(Rect _pos, const char* path0, const char* path1, const char* path2)
+Button::Button(Rect _pos, const Text& _text) :text(_text)
 {
 	pos = _pos;
-	texture[0] = LoadTexture(path0);
-	texture[1] = LoadTexture(path1);
-	texture[2] = LoadTexture(path2);
+	texture[0] = LoadTexture("img//button//button1.bmp");
+	texture[1] = LoadTexture("img//button//button2.bmp");
+	texture[2] = LoadTexture("img//button//button3.bmp");
+	text_pos = Point(pos.lx, pos.ly) + Point(5, 30);
 	state = 0;
+}
+
+void Button::SetText(const Text& _text)
+{
+	text = _text;
 }
 
 void Button::Draw()
 {
 	DrawTexture(pos, texture[state]);
+	DrawString(text, text_pos + (state == 2 ? Point(5, 5) : Point()));
 }
 
 void Button::OnMouse(Point u)
@@ -27,7 +34,7 @@ void Button::OnMouse(Point u)
 	}
 }
 
-bool Button::OnClick(Point u,int mouse_state)
+bool Button::OnClick(Point u, int mouse_state)
 {
 	if (pos.inRect(u) && mouse_state == GLUT_DOWN)
 		state = 2;
