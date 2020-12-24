@@ -11,7 +11,7 @@ class Button
 	int state;
 
 public:
-	Button(Rect _pos, const Text &_text);
+	Button(Rect _pos, const Text &_text, Point _text_pos);
 	
 	void SetText(const Text& _text);
 	void Draw();
