@@ -180,6 +180,11 @@ void DrawString(const char* str, const char* font, int size, int x, int y, doubl
 	glDeleteLists(list, 1);
 }
 
+void DrawString(const Text& text, Point pos)
+{
+	DrawString(text.str.c_str(), text.font.c_str(), text.size, pos.x, pos.y, text.R, text.G, text.B);
+}
+
 void SelectFont(int size, int charset, const char* face)
 {
 	HFONT hFont = CreateFontA(size, 0, 0, 0, FW_BOLD, 0, 0, 0,
