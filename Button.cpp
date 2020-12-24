@@ -1,13 +1,13 @@
 #include "Button.h"
 //#include <iostream>
 
-Button::Button(Rect _pos, const Text& _text) :text(_text)
+Button::Button(Rect _pos, const Text& _text, Point _text_pos) :text(_text)
 {
 	pos = _pos;
 	texture[0] = LoadTexture("img//button//button1.bmp");
 	texture[1] = LoadTexture("img//button//button2.bmp");
 	texture[2] = LoadTexture("img//button//button3.bmp");
-	text_pos = Point(pos.lx, pos.ly) + Point(5, 30);
+	text_pos = Point(pos.lx, pos.ly) + _text_pos;
 	state = 0;
 }
 

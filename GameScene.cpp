@@ -41,8 +41,10 @@ GameScene::GameScene(int width, int height) :scene_width(width), scene_height(he
 
 	pCheckerBoard = new CheckerBoard(Rect(0, 0, 900, 900));
 	pMenuBoard = new MenuBoard(Rect(900, 0, 1200, 900));
-	pStartBlack = new Button(Rect(950, 425, 1150, 475), Text("开始游戏：黑棋", "楷体", 22));
-	pStartWhite = new Button(Rect(950, 500, 1150, 550), Text("开始游戏：白棋", "楷体", 22));
+	pStartBlack = new Button(Rect(950, 425, 1150, 475), Text("开始游戏：黑棋", "楷体", 22), Point(5, 30));
+	pStartWhite = new Button(Rect(950, 500, 1150, 550), Text("开始游戏：白棋", "楷体", 22), Point(5, 30));
+	pSave = new Button(Rect(950, 575, 1150, 625), Text("保存游戏", "楷体", 30), Point(25, 35));
+	pRead = new Button(Rect(950, 650, 1150, 700), Text("读取游戏", "楷体", 30), Point(25, 35));
 
 	game_state = MAIN_MENU;
 	pMenuBoard->SetGameState(game_state);
@@ -63,6 +65,8 @@ GameScene::~GameScene()
 	delete this->pMenuBoard;
 	delete this->pStartBlack;
 	delete this->pStartWhite;
+	delete this->pSave;
+	delete this->pRead;
 }
 
 void GameScene::Init()
@@ -83,6 +87,8 @@ void GameScene::Display()
 	pMenuBoard->Draw();
 	pStartBlack->Draw();
 	pStartWhite->Draw();
+	pSave->Draw();
+	pRead->Draw();
 
 	glutSwapBuffers();
 }
@@ -119,6 +125,8 @@ void GameScene::OnMouseMove(int x, int y)
 			pCheckerBoard->SetMousePos(Point(x, y));
 		else
 			pCheckerBoard->SetMousePos(Point(-1, -1));
+		pSave->OnMouse(Point(x, y));
+		pRead->OnMouse(Point(x, y));
 	}
 	else
 	{
@@ -131,10 +139,12 @@ void GameScene::OnMouseMove(int x, int y)
 void GameScene::OnMouseClick(int button, int state, int x, int y)
 {
 	std::cerr << "Mouse click at pos (" << x << "," << y << ")" << std::endl;
-	if (game_state == IN_GAME)
+	
+	if (button == GLUT_LEFT_BUTTON)
 	{
-		if (button == GLUT_LEFT_BUTTON)
-			if (state == GLUT_UP)
+		if (state == GLUT_UP)
+		{
+			if (game_state == IN_GAME)
 			{
 				if (pCheckerBoard->in(Point(x, y)))
 					pCheckerBoard->OnMouseClick(Point(x, y));
@@ -150,24 +160,21 @@ void GameScene::OnMouseClick(int button, int state, int x, int y)
 					pAI->SendGameMessage();
 					msg_send = true;
 				}
+
+				pSave->OnClick(Point(x, y), state);
+				pRead->OnClick(Point(x, y), state);
 			}
-	}
-	//else
-	{
-		if (button == GLUT_LEFT_BUTTON)
+			if (pStartBlack->OnClick(Point(x, y), state))
+				StartGame(Color::BLACK);
+			if (pStartWhite->OnClick(Point(x, y), state))
+				StartGame(Color::WHITE);
+		}
+		else if (state == GLUT_DOWN)
 		{
-			if (state == GLUT_DOWN)
-			{
-				pStartBlack->OnClick(Point(x, y), state);
-				pStartWhite->OnClick(Point(x, y), state);
-			}
-			else if (state == GLUT_UP)
-			{
-				if (pStartBlack->OnClick(Point(x, y), state))
-					StartGame(Color::BLACK);
-				if (pStartWhite->OnClick(Point(x, y), state))
-					StartGame(Color::WHITE);
-			}
+			pStartBlack->OnClick(Point(x, y), state);
+			pStartWhite->OnClick(Point(x, y), state);
+			pSave->OnClick(Point(x, y), state);
+			pRead->OnClick(Point(x, y), state);
 		}
 	}
 }

@@ -19,6 +19,7 @@ class GameScene
 	CheckerBoard* pCheckerBoard;
 	MenuBoard* pMenuBoard;
 	Button* pStartBlack, * pStartWhite;
+	Button* pSave, * pRead;
 
 	void StartGame(Color c);
 public:
