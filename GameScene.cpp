@@ -1,8 +1,9 @@
-#include "GameScene.h"
 #include <GL/glut.h>
 #include "Graphic.h"
-
+#include "SaveManager.h"
 #include "GameAI_MCTS.h"
+#include "GameScene.h"
+
 
 void GameScene::StartGame(Color c)
 {
@@ -132,8 +133,11 @@ void GameScene::OnMouseMove(int x, int y)
 	{
 		pCheckerBoard->SetMousePos(Point(-1, -1));
 	}
-	pStartBlack->OnMouse(Point(x, y));
-	pStartWhite->OnMouse(Point(x, y));
+	if (game_state != PAUSE)
+	{
+		pStartBlack->OnMouse(Point(x, y));
+		pStartWhite->OnMouse(Point(x, y));
+	}
 }
 
 void GameScene::OnMouseClick(int button, int state, int x, int y)
@@ -161,20 +165,42 @@ void GameScene::OnMouseClick(int button, int state, int x, int y)
 					msg_send = true;
 				}
 
-				pSave->OnClick(Point(x, y), state);
-				pRead->OnClick(Point(x, y), state);
+				if (pSave->OnClick(Point(x, y), state))
+				{
+					wchar_t path[MAX_PATH];
+					GetCurrentDirectory(MAX_PATH, path);
+					int tmp = game_state;
+					game_state = PAUSE;
+					std::string str = GetSaveFile(TEXT("存档文件(*.save)\0*.save\0所有文件(*.*)\0*.*"), TEXT("打开存档"), path);
+					game_state = tmp;
+				}
+				if (pRead->OnClick(Point(x, y), state))
+				{
+					wchar_t path[MAX_PATH];
+					GetCurrentDirectory(MAX_PATH, path);
+					int tmp = game_state;
+					game_state = PAUSE;
+					std::string str = GetOpenFile(TEXT("存档文件(*.save)\0*.save\0所有文件(*.*)\0*.*"), TEXT("打开存档"), path);
+					game_state = tmp;
+				}
 			}
-			if (pStartBlack->OnClick(Point(x, y), state))
-				StartGame(Color::BLACK);
-			if (pStartWhite->OnClick(Point(x, y), state))
-				StartGame(Color::WHITE);
+			if (game_state != PAUSE)
+			{
+				if (pStartBlack->OnClick(Point(x, y), state))
+					StartGame(Color::BLACK);
+				if (pStartWhite->OnClick(Point(x, y), state))
+					StartGame(Color::WHITE);
+			}
 		}
 		else if (state == GLUT_DOWN)
 		{
-			pStartBlack->OnClick(Point(x, y), state);
-			pStartWhite->OnClick(Point(x, y), state);
-			pSave->OnClick(Point(x, y), state);
-			pRead->OnClick(Point(x, y), state);
+			if (game_state != PAUSE)
+			{
+				pStartBlack->OnClick(Point(x, y), state);
+				pStartWhite->OnClick(Point(x, y), state);
+				pSave->OnClick(Point(x, y), state);
+				pRead->OnClick(Point(x, y), state);
+			}
 		}
 	}
 }
