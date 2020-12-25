@@ -166,6 +166,7 @@ void GameAI_MCTS::Run()
 				Search(root);
 				search_times++;
 			}
+			/*
 			std::cerr << "Search times:" << search_times << std::endl;
 			for (int i = 0; i < 9; i++)
 				for (int j = 0; j < 9; j++)
@@ -175,6 +176,7 @@ void GameAI_MCTS::Run()
 						<< "    n is " << root->son[i][j]->n
 						<< "    The rating is " << root->son[i][j]->value / root->son[i][j]->n
 						<< std::endl;
+			*/
 			ai_move = root->FindMaxRating();
 			Move(ai_move);
 

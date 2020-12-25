@@ -179,7 +179,7 @@ void GameScene::OnMouseMove(int x, int y)
 
 void GameScene::OnMouseClick(int button, int state, int x, int y)
 {
-	std::cerr << "Mouse click at pos (" << x << "," << y << ")" << std::endl;
+	//std::cerr << "Mouse click at pos (" << x << "," << y << ")" << std::endl;
 
 	if (button == GLUT_LEFT_BUTTON)
 	{
