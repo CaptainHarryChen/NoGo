@@ -5,10 +5,10 @@
 #include "GameScene.h"
 
 
-void GameScene::StartGame(Color c)
+void GameScene::StartGame(Color human)
 {
-	col_human = c;
-	col_ai = c == Color::BLACK ? Color::WHITE : Color::BLACK;
+	col_human = human;
+	col_ai = human == Color::BLACK ? Color::WHITE : Color::BLACK;
 
 	if (pRuler != nullptr)
 		delete pRuler;
@@ -18,10 +18,47 @@ void GameScene::StartGame(Color c)
 		delete pAI;
 	pAI = new GameAI_MCTS(col_ai);
 
-	pCheckerBoard->Init(c, pRuler, pAI);
+	pCheckerBoard->Init(human, pRuler, pAI);
 	pAI->SetBeginningState();
 	pAI->Start();
 	game_state = IN_GAME;
+	pMenuBoard->SetGameState(game_state);
+	pStartBlack->SetText(Text("重新开始：黑棋", "楷体", 22));
+	pStartWhite->SetText(Text("重新开始：白棋", "楷体", 22));
+
+	msg_send = false;
+
+	if (!msg_send && pRuler->moveColor() == col_ai)
+	{
+		pAI->SendGameMessage();
+		msg_send = true;
+	}
+}
+
+void GameScene::StartGame(Color human, Color board[9][9])
+{
+	col_human = human;
+	col_ai = human == Color::BLACK ? Color::WHITE : Color::BLACK;
+
+	if (pRuler != nullptr)
+		delete pRuler;
+	pRuler = new GameRule;
+
+	if (pAI != nullptr)
+		delete pAI;
+	pAI = new GameAI_MCTS(col_ai);
+	pAI->SetBeginningState(board);
+
+	for (int i = 0; i < 9; i++)
+		for (int j = 0; j < 9; j++)
+			pRuler->A[i][j] = board[i][j];
+	pRuler->Restucture();
+	pCheckerBoard->Init(human, pRuler, pAI);
+	pCheckerBoard->SetBoard(board);
+	
+	pAI->Start();
+	game_state = IN_GAME;
+
 	pMenuBoard->SetGameState(game_state);
 	pStartBlack->SetText(Text("重新开始：黑棋", "楷体", 22));
 	pStartWhite->SetText(Text("重新开始：白棋", "楷体", 22));
@@ -127,7 +164,6 @@ void GameScene::OnMouseMove(int x, int y)
 		else
 			pCheckerBoard->SetMousePos(Point(-1, -1));
 		pSave->OnMouse(Point(x, y));
-		pRead->OnMouse(Point(x, y));
 	}
 	else
 	{
@@ -135,6 +171,7 @@ void GameScene::OnMouseMove(int x, int y)
 	}
 	if (game_state != PAUSE)
 	{
+		pRead->OnMouse(Point(x, y));
 		pStartBlack->OnMouse(Point(x, y));
 		pStartWhite->OnMouse(Point(x, y));
 	}
@@ -143,7 +180,7 @@ void GameScene::OnMouseMove(int x, int y)
 void GameScene::OnMouseClick(int button, int state, int x, int y)
 {
 	std::cerr << "Mouse click at pos (" << x << "," << y << ")" << std::endl;
-	
+
 	if (button == GLUT_LEFT_BUTTON)
 	{
 		if (state == GLUT_UP)
@@ -169,19 +206,11 @@ void GameScene::OnMouseClick(int button, int state, int x, int y)
 				{
 					wchar_t path[MAX_PATH];
 					GetCurrentDirectory(MAX_PATH, path);
-					int tmp = game_state;
+					wcscat_s(path, TEXT("save\\"));
 					game_state = PAUSE;
 					std::string str = GetSaveFile(TEXT("存档文件(*.save)\0*.save\0所有文件(*.*)\0*.*"), TEXT("打开存档"), path);
-					game_state = tmp;
-				}
-				if (pRead->OnClick(Point(x, y), state))
-				{
-					wchar_t path[MAX_PATH];
-					GetCurrentDirectory(MAX_PATH, path);
-					int tmp = game_state;
-					game_state = PAUSE;
-					std::string str = GetOpenFile(TEXT("存档文件(*.save)\0*.save\0所有文件(*.*)\0*.*"), TEXT("打开存档"), path);
-					game_state = tmp;
+					WriteSave(str, pRuler->A, col_human);
+					game_state = IN_GAME;
 				}
 			}
 			if (game_state != PAUSE)
@@ -190,15 +219,32 @@ void GameScene::OnMouseClick(int button, int state, int x, int y)
 					StartGame(Color::BLACK);
 				if (pStartWhite->OnClick(Point(x, y), state))
 					StartGame(Color::WHITE);
+				if (pRead->OnClick(Point(x, y), state))
+				{
+					wchar_t path[MAX_PATH];
+					GetCurrentDirectory(MAX_PATH, path);
+					wcscat_s(path, TEXT("save\\"));
+					game_state = PAUSE;
+					std::string str = GetOpenFile(TEXT("存档文件(*.save)\0*.save\0所有文件(*.*)\0*.*"), TEXT("打开存档"), path);
+					Color tmpBoard[9][9], human;
+					if (!ReadSave(str, tmpBoard, human))
+						MessageBox(NULL, TEXT("存档格式错误"), TEXT("错误"), MB_ICONERROR);
+					else
+						StartGame(human, tmpBoard);
+					game_state = IN_GAME;
+				}
 			}
 		}
 		else if (state == GLUT_DOWN)
 		{
+			if (game_state == IN_GAME)
+			{
+				pSave->OnClick(Point(x, y), state);
+			}
 			if (game_state != PAUSE)
 			{
 				pStartBlack->OnClick(Point(x, y), state);
 				pStartWhite->OnClick(Point(x, y), state);
-				pSave->OnClick(Point(x, y), state);
 				pRead->OnClick(Point(x, y), state);
 			}
 		}

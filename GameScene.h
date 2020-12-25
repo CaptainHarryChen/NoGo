@@ -21,7 +21,8 @@ class GameScene
 	Button* pStartBlack, * pStartWhite;
 	Button* pSave, * pRead;
 
-	void StartGame(Color c);
+	void StartGame(Color human);
+	void StartGame(Color human, Color board[9][9]);
 public:
 	GameScene(int width, int height);
 	~GameScene();
