@@ -36,6 +36,13 @@ void CheckerBoard::Init(Color c_human, GameRule* p, GameAI* pai)
 	memset(board, 0, sizeof board);
 }
 
+void CheckerBoard::SetBoard(Color tboard[9][9])
+{
+	for (int i = 0; i < 9; i++)
+		for (int j = 0; j < 9; j++)
+			board[i][j] = tboard[i][j];
+}
+
 void CheckerBoard::Draw()
 {
 	int w = (pos.rx - pos.lx) / 9, h = (pos.ry - pos.ly) / 9;
