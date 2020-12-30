@@ -280,7 +280,7 @@ int GameRule::Evaluate(Color col)
 
 const double Confidence = 1.414;
 const int LeastVisitTime = 5;
-const int RolloutStep = 5;
+const int RolloutStep = 20;
 
 struct MCTS_Node
 {
