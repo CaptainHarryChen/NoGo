@@ -11,29 +11,12 @@
 
 const double Confidence = 1.414;
 const int LeastVisitTime = 5;
-const int RolloutStep = 5;
+const int RolloutStep = 20;
 
-struct MCTS_Node;
-/*
-struct cmp
-{
-	Point op;
-	double ucb;
-
-	cmp() { ucb = 0; }
-	cmp(Point a, double b) :op(a), ucb(b) {}
-
-	bool operator < (const cmp& t)const
-	{
-		return ucb < t.ucb;
-	}
-};
-*/
 struct MCTS_Node
 {
 	double value;
 	int n;
-	//std::priority_queue<cmp> que;
 	std::vector<Point> que;
 	MCTS_Node* son[9][9];
 
