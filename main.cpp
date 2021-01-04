@@ -32,7 +32,10 @@ void Idle()
 
 void Reshape(int new_w, int new_h)
 {
-	glutReshapeWindow(win_w, win_h);
+	win_w = new_w;
+	win_h = new_h;
+	glViewport(0, 0, win_w, win_h);
+	//glutReshapeWindow(win_w, win_h);
 }
 
 void Timer(int id)
