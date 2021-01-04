@@ -33,41 +33,18 @@ void Idle()
 void Reshape(int new_w, int new_h)
 {
 	glutReshapeWindow(win_w, win_h);
-	//win_width = new_w;
-	//win_height = new_h;
-
-	//nowsce.Update();
 }
 
 void Timer(int id)
 {
-	/*switch (id)
-	{
-	case TIMER_UPDATE:
-		if (UpdateScreen != NULL)
-			(*UpdateScreen)();
-		Display();
-		glutTimerFunc(time_to_update, &Timer, TIMER_UPDATE);
-		break;
-	default:
-		break;
-	}*/
 }
 
 void OnKeyBoard(unsigned char key, int x, int y)
 {
-	/*int tx, ty;
-	CtoGui::ChangeXY(x, y, tx, ty);
-	if (KeyProcess != NULL)
-		KeyProcess(key, ty, tx);*/
 }
 
 void OnSpecialKey(int key, int x, int y)
 {
-	/*int tx, ty;
-	CtoGui::ChangeXY(x, y, tx, ty);
-	if (SpecialProcess != NULL)
-		SpecialProcess(key, ty, tx);*/
 }
 
 void OnMouseMove(int x, int y)
@@ -101,7 +78,7 @@ int main(int argc, char** argv)
 
 	glutDisplayFunc(&Display);
 	glutIdleFunc(&Idle);
-	//glutReshapeFunc(&Reshape);
+	glutReshapeFunc(&Reshape);
 	glutKeyboardFunc(&OnKeyBoard);
 	glutSpecialFunc(&OnSpecialKey);
 	glutMouseFunc(&OnMouseClick);

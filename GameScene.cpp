@@ -23,6 +23,7 @@ void GameScene::StartGame(Color human)
 	pAI->Start();
 	game_state = IN_GAME;
 	pMenuBoard->SetGameState(game_state);
+	pMenuBoard->SetMoveColor(Color::BLACK);
 	pStartBlack->SetText(Text("重新开始：黑棋", "楷体", 22));
 	pStartWhite->SetText(Text("重新开始：白棋", "楷体", 22));
 
@@ -60,6 +61,7 @@ void GameScene::StartGame(Color human, Color board[9][9])
 	game_state = IN_GAME;
 
 	pMenuBoard->SetGameState(game_state);
+	pMenuBoard->SetMoveColor(pRuler->moveColor());
 	pStartBlack->SetText(Text("重新开始：黑棋", "楷体", 22));
 	pStartWhite->SetText(Text("重新开始：白棋", "楷体", 22));
 
@@ -142,6 +144,7 @@ void GameScene::Idle()
 			{
 				pRuler->setPiece(a.x, a.y, col_ai);
 				pCheckerBoard->setPiece(a.x, a.y, col_ai);
+				pMenuBoard->SetMoveColor(pRuler->moveColor());
 				int tmp = pRuler->isOver();
 				if (tmp)
 				{
@@ -190,6 +193,7 @@ void GameScene::OnMouseClick(int button, int state, int x, int y)
 				if (pCheckerBoard->in(Point(x, y)))
 					pCheckerBoard->OnMouseClick(Point(x, y));
 
+				pMenuBoard->SetMoveColor(pRuler->moveColor());
 				int tmp = pRuler->isOver();
 				if (tmp)
 				{
